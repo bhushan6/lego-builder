@@ -3,7 +3,7 @@ import { OrbitControls } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import { Suspense } from "react";
 import { LinearToneMapping } from "three";
-import { Scene } from "./components";
+import { InfoPanel, Scene } from "./components";
 
 function App() {
   return (
@@ -29,6 +29,7 @@ function App() {
           <OrbitControls />
         </Suspense>
       </Canvas>
+      <InfoPanel />
     </div>
   );
 }
