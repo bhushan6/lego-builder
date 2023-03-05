@@ -13,7 +13,7 @@ export const Scene = () => {
 
   const brickCursorRef = useRef();
 
-  const { width, depth, rotate } = useControls({
+  const { width, depth, rotate, color } = useControls({
     width: {
       value: 1,
       min: 1,
@@ -21,12 +21,13 @@ export const Scene = () => {
       step: 1,
     },
     depth: {
-      value: 2,
+      value: 1,
       min: 1,
       max: 5,
       step: 1,
     },
     rotate: false,
+    color: "#f00",
   });
 
   const addBrick = (e) => {
@@ -80,6 +81,7 @@ export const Scene = () => {
           uID: uID(),
           dimensions: { x: width, z: depth },
           rotation: rotate ? Math.PI / 2 : 0,
+          color: color,
         };
 
         setBricks((prevState) => [...prevState, brickData]);
@@ -155,6 +157,7 @@ export const Scene = () => {
             bricksBoundBox={bricksBoundBox}
             uID={b.uID}
             mouseMove={mouseMove}
+            color={b.color}
           />
         );
       })}

@@ -16,7 +16,7 @@ function App() {
           toneMapping: LinearToneMapping,
         }}
         camera={{
-          position: [0, 0, 10],
+          position: [17.43, 657.76, 943.51],
           near: 0.1,
           far: 20000,
         }}

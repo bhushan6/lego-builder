@@ -1,3 +1,4 @@
+import { useThree } from "@react-three/fiber";
 import React, { forwardRef, useMemo } from "react";
 import { Vector3 } from "three";
 import { getMeasurementsFromDimensions, base } from "../utils";
