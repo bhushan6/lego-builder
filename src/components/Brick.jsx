@@ -38,6 +38,7 @@ export const Brick = ({
   addBrick = () => {},
   bricksBoundBox = { current: [] },
   uID = "",
+  mouseMove = () => {},
 }) => {
   const brickRef = useRef();
 
@@ -91,6 +92,7 @@ export const Brick = ({
         castShadow={true}
         receiveShadow={true}
         geometry={brickGeometry}
+        onPointerMove={mouseMove}
       >
         <meshStandardMaterial
           color={CSSToHex(color)}

@@ -170,6 +170,7 @@ export const Scene = () => {
             rotation={b.rotation}
             bricksBoundBox={bricksBoundBox}
             uID={b.uID}
+            mouseMove={mouseMove}
           />
         );
       })}
