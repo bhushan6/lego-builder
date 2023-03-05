@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef, forwardRef, useMemo } from "react";
 import { Shadow, Brick } from ".";
-import { Vector3 } from "three";
+import { Vector3, Box3 } from "three";
 import { uID, getMeasurementsFromDimensions, base } from "../utils";
 import { useControls } from "leva";
 
@@ -85,15 +85,54 @@ export const Scene = () => {
   const addBrick = (e) => {
     e.stopPropagation();
 
-    if (!isDrag.current) {
-      const brickData = {
-        intersect: { point: e.point, face: e.face },
-        uID: uID(),
-        dimensions: { x: width, z: length },
-        rotation: rotate ? Math.PI / 2 : 0,
-      };
+    if (!brickCursorRef.current) return;
 
-      setBricks((prevState) => [...prevState, brickData]);
+    if (!isDrag.current) {
+      const dimensions = getMeasurementsFromDimensions({
+        x: width,
+        z: length,
+      });
+      const boundingBoxOfBrickToBeAdded = new Box3().setFromObject(
+        brickCursorRef.current
+      );
+
+      let canCreate = true;
+
+      for (let index = 0; index < bricksBoundBox.current.length; index++) {
+        const brickBoundingBox = bricksBoundBox.current[index].brickBoundingBox;
+        const collision =
+          boundingBoxOfBrickToBeAdded.intersectsBox(brickBoundingBox);
+
+        if (collision) {
+          const dx = Math.abs(
+            brickBoundingBox.max.x - boundingBoxOfBrickToBeAdded.max.x
+          );
+          const dz = Math.abs(
+            brickBoundingBox.max.z - boundingBoxOfBrickToBeAdded.max.z
+          );
+          const yIntsersect =
+            brickBoundingBox.max.y - 9 > boundingBoxOfBrickToBeAdded.min.y;
+          if (
+            yIntsersect &&
+            dx !== dimensions.width &&
+            dz !== dimensions.depth
+          ) {
+            canCreate = false;
+            break;
+          }
+        }
+      }
+
+      if (canCreate) {
+        const brickData = {
+          intersect: { point: e.point, face: e.face },
+          uID: uID(),
+          dimensions: { x: width, z: length },
+          rotation: rotate ? Math.PI / 2 : 0,
+        };
+
+        setBricks((prevState) => [...prevState, brickData]);
+      }
     } else {
       isDrag.current = false;
     }
@@ -110,8 +149,6 @@ export const Scene = () => {
 
     const evenWidth = rotate === 0 ? width % 2 === 0 : length % 2 === 0;
     const evenDepth = rotate === 0 ? length % 2 === 0 : width % 2 === 0;
-
-    console.log(e.face.normal, e.point);
 
     brickCursorRef.current.position
       .copy(new Vector3(e.point.x, Math.abs(e.point.y), e.point.z))
@@ -141,7 +178,7 @@ export const Scene = () => {
       t && clearTimeout(t);
       t = setTimeout(() => {
         isDrag.current = true;
-      }, 100);
+      }, 300);
     };
 
     const up = () => {
@@ -207,7 +244,7 @@ export const Scene = () => {
         <planeGeometry args={[1500, 1500]} />
         <meshBasicMaterial visible={false} />
       </mesh>
-      <BrickCursor ref={brickCursorRef} />
+      <BrickCursor ref={brickCursorRef} dimensions={{ z: width, x: length }} />
     </>
   );
 };
