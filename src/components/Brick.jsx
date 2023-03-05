@@ -7,6 +7,8 @@ import {
 } from "../utils";
 import { Vector3, Box3 } from "three";
 
+const emptyFn = () => {};
+
 export const Brick = ({
   intersect,
   color = "#ff0000",
@@ -17,6 +19,7 @@ export const Brick = ({
   bricksBoundBox = { current: [] },
   uID = "",
   mouseMove = () => {},
+  isModeEdit,
 }) => {
   const brickRef = useRef();
 
@@ -58,6 +61,14 @@ export const Brick = ({
     };
   }, [uID, bricksBoundBox]);
 
+  const onPointerOver = (e) => {
+    document.body.style.cursor = "pointer";
+  };
+
+  const onPointerLeave = () => {
+    document.body.style.cursor = "inherit";
+  };
+
   return (
     <>
       <mesh
@@ -68,7 +79,9 @@ export const Brick = ({
         castShadow={true}
         receiveShadow={true}
         geometry={brickGeometry}
-        onPointerMove={mouseMove}
+        onPointerMove={isModeEdit ? emptyFn : mouseMove}
+        onPointerLeave={!isModeEdit ? emptyFn : onPointerLeave}
+        onPointerEnter={!isModeEdit ? emptyFn : onPointerOver}
       >
         <meshStandardMaterial
           color={CSSToHex(color)}

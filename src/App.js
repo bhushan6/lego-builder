@@ -21,7 +21,7 @@ function App() {
           far: 20000,
         }}
         colorManagement={true}
-        shadowMap={true} // highlight-line
+        shadowMap={true}
         dpr={Math.min(2, window.devicePixelRatio)}
       >
         <Suspense fallback={null}>

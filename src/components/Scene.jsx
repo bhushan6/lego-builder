@@ -13,7 +13,7 @@ export const Scene = () => {
 
   const brickCursorRef = useRef();
 
-  const { width, depth, rotate, color } = useControls({
+  const [{ width, depth, rotate, color, edit }, set] = useControls(() => ({
     width: {
       value: 1,
       min: 1,
@@ -28,10 +28,13 @@ export const Scene = () => {
     },
     rotate: false,
     color: "#f00",
-  });
+    edit: false,
+  }));
 
   const addBrick = (e) => {
     e.stopPropagation();
+
+    if (edit) return;
 
     if (!e.face || !e.face.normal || !e.point) return;
 
@@ -158,6 +161,7 @@ export const Scene = () => {
             uID={b.uID}
             mouseMove={mouseMove}
             color={b.color}
+            isModeEdit={edit}
           />
         );
       })}
@@ -168,6 +172,7 @@ export const Scene = () => {
         ref={brickCursorRef}
         rotation={rotate ? Math.PI / 2 : 0}
         dimensions={{ x: width, z: depth }}
+        isModeEdit={edit}
       />
     </>
   );

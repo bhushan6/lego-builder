@@ -1,4 +1,3 @@
-import { useThree } from "@react-three/fiber";
 import React, { forwardRef, useMemo } from "react";
 import { Vector3 } from "three";
 import { getMeasurementsFromDimensions, base } from "../utils";
@@ -13,6 +12,7 @@ export const BrickCursor = forwardRef(
       dimensions = { x: 1, z: 1 },
       rotation = 0,
       translation = 0,
+      isModeEdit,
     },
     ref
   ) => {
@@ -47,7 +47,12 @@ export const BrickCursor = forwardRef(
           receiveShadow={true}
         >
           <boxGeometry args={[width, height, depth]} />
-          <meshBasicMaterial color={"black"} transparent={true} opacity={0.3} />
+          <meshBasicMaterial
+            color={"black"}
+            visible={!isModeEdit}
+            transparent={true}
+            opacity={0.3}
+          />
         </mesh>
       </>
     );
