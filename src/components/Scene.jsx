@@ -1,61 +1,8 @@
-import React, { useEffect, useState, useRef, forwardRef, useMemo } from "react";
-import { Shadow, Brick } from ".";
+import React, { useEffect, useState, useRef } from "react";
+import { Shadow, Brick, BrickCursor, Lights, Workspace } from ".";
 import { Vector3, Box3 } from "three";
 import { uID, getMeasurementsFromDimensions, base } from "../utils";
 import { useControls } from "leva";
-
-const BrickCursor = forwardRef(
-  (
-    {
-      intersect = {
-        point: new Vector3(),
-        face: { normal: { x: 0, y: 0, z: 1 } },
-      },
-      dimensions = { x: 1, z: 1 },
-      rotation = 0,
-      translation = 0,
-    },
-    ref
-  ) => {
-    const { height, width, depth } = getMeasurementsFromDimensions(dimensions);
-
-    const position = useMemo(() => {
-      const evenWidth =
-        rotation === 0 ? dimensions.x % 2 === 0 : dimensions.z % 2 === 0;
-      const evenDepth =
-        rotation === 0 ? dimensions.z % 2 === 0 : dimensions.x % 2 === 0;
-
-      return new Vector3()
-        .copy(intersect.point)
-        .add(intersect.face.normal)
-        .divide(new Vector3(base, height, base))
-        .floor()
-        .multiply(new Vector3(base, height, base))
-        .add(
-          new Vector3(
-            evenWidth ? base : base / 2,
-            height / 2,
-            evenDepth ? base : base / 2
-          )
-        );
-    }, [intersect, dimensions.x, dimensions.z, height, rotation]);
-
-    return (
-      <>
-        <mesh
-          ref={ref}
-          position={[position.x, Math.abs(position.y), position.z]}
-          rotation={[0, rotation, 0]}
-          castShadow={true}
-          receiveShadow={true}
-        >
-          <boxGeometry args={[width, height, depth]} />
-          <meshBasicMaterial color={"black"} transparent={true} opacity={0.3} />
-        </mesh>
-      </>
-    );
-  }
-);
 
 let t;
 
@@ -66,15 +13,15 @@ export const Scene = () => {
 
   const brickCursorRef = useRef();
 
-  const { width, length, rotate } = useControls({
+  const { width, depth, rotate } = useControls({
     width: {
       value: 1,
       min: 1,
       max: 5,
       step: 1,
     },
-    length: {
-      value: 1,
+    depth: {
+      value: 2,
       min: 1,
       max: 5,
       step: 1,
@@ -85,12 +32,14 @@ export const Scene = () => {
   const addBrick = (e) => {
     e.stopPropagation();
 
+    if (!e.face || !e.face.normal || !e.point) return;
+
     if (!brickCursorRef.current) return;
 
     if (!isDrag.current) {
       const dimensions = getMeasurementsFromDimensions({
         x: width,
-        z: length,
+        z: depth,
       });
       const boundingBoxOfBrickToBeAdded = new Box3().setFromObject(
         brickCursorRef.current
@@ -102,6 +51,8 @@ export const Scene = () => {
         const brickBoundingBox = bricksBoundBox.current[index].brickBoundingBox;
         const collision =
           boundingBoxOfBrickToBeAdded.intersectsBox(brickBoundingBox);
+
+        console.log(collision);
 
         if (collision) {
           const dx = Math.abs(
@@ -127,7 +78,7 @@ export const Scene = () => {
         const brickData = {
           intersect: { point: e.point, face: e.face },
           uID: uID(),
-          dimensions: { x: width, z: length },
+          dimensions: { x: width, z: depth },
           rotation: rotate ? Math.PI / 2 : 0,
         };
 
@@ -144,20 +95,16 @@ export const Scene = () => {
 
     const { height } = getMeasurementsFromDimensions({
       x: width,
-      z: length,
+      z: depth,
     });
 
-    const evenWidth = rotate === 0 ? width % 2 === 0 : length % 2 === 0;
-    const evenDepth = rotate === 0 ? length % 2 === 0 : width % 2 === 0;
+    const evenWidth = !rotate ? width % 2 === 0 : depth % 2 === 0;
+    const evenDepth = !rotate ? depth % 2 === 0 : width % 2 === 0;
 
     brickCursorRef.current.position
       .copy(new Vector3(e.point.x, Math.abs(e.point.y), e.point.z))
       .add(
-        new Vector3(
-          e.face.normal.x,
-          e.face.normal.y === -0 ? 0 : e.face.normal.y,
-          e.face.normal.z
-        )
+        new Vector3(e.face.normal.x, Math.abs(e.face.normal.y), e.face.normal.z)
       )
       .divide(new Vector3(base, height, base))
       .floor()
@@ -212,39 +159,13 @@ export const Scene = () => {
         );
       })}
       <Shadow />
-      <spotLight
-        position={[-1000, 1500, -500]}
-        intensity={0.9}
-        castShadow={true}
-        shadowBias={-0.0000022}
-        penumbra={0.5}
-        decay={2}
-        shadowMapHeight={4096}
-        shadowMapWidth={4096}
-        // shadow={
-        //   new THREE.LightShadow(
-        //     new THREE.OrthographicCamera(
-        //       window.innerWidth / -2,
-        //       window.innerWidth / 2,
-        //       window.innerHeight / 2,
-        //       window.innerHeight / -2,
-        //       1,
-        //       10000
-        //     )
-        //   )
-        // }
+      <Lights />
+      <Workspace addBrick={addBrick} mouseMove={mouseMove} />
+      <BrickCursor
+        ref={brickCursorRef}
+        rotation={rotate ? Math.PI / 2 : 0}
+        dimensions={{ x: width, z: depth }}
       />
-      <ambientLight intensity={0.4} />
-      <gridHelper onClick={addBrick} args={[1500, 60]} />
-      <mesh
-        rotation={[-Math.PI / 2, 0, 0]}
-        onClick={addBrick}
-        onPointerMove={mouseMove}
-      >
-        <planeGeometry args={[1500, 1500]} />
-        <meshBasicMaterial visible={false} />
-      </mesh>
-      <BrickCursor ref={brickCursorRef} dimensions={{ z: width, x: length }} />
     </>
   );
 };

@@ -1,5 +1,5 @@
-import { base } from "./constants";
-import * as THREE from "three";
+import { base, knobSize } from "./constants";
+import { BoxGeometry, CylinderGeometry } from "three";
 import { mergeBufferGeometries } from "three/addons/utils/BufferGeometryUtils.js";
 
 export function CSSToHex(cssColor) {
@@ -16,6 +16,27 @@ export function getMeasurementsFromDimensions({ x, y, z }) {
 
 export function mergeMeshes(geometries) {
   return mergeBufferGeometries(geometries);
+}
+
+export function createGeometry({ width, height, depth, dimensions }) {
+  let geometries = [];
+  const cubeGeo = new BoxGeometry(width - 0.1, height - 0.1, depth - 0.1);
+
+  geometries.push(cubeGeo);
+
+  for (let i = 0; i < dimensions.x; i++) {
+    for (let j = 0; j < dimensions.z; j++) {
+      const cylinder = new CylinderGeometry(knobSize, knobSize, knobSize, 20);
+      const x = base * i - ((dimensions.x - 1) * base) / 2;
+      const y = base / 1.5;
+      const z = base * j - ((dimensions.z - 1) * base) / 2;
+      cylinder.translate(x, y, z);
+      geometries.push(cylinder);
+    }
+  }
+
+  const brickGeometry = mergeBufferGeometries(geometries);
+  return brickGeometry;
 }
 
 export function collisonXYZ(o1, o2) {

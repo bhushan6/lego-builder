@@ -3,31 +3,9 @@ import {
   CSSToHex,
   getMeasurementsFromDimensions,
   base,
-  knobSize,
+  createGeometry,
 } from "../utils";
-import { BoxGeometry, CylinderGeometry, Vector3, Box3 } from "three";
-import { mergeBufferGeometries } from "three/addons/utils/BufferGeometryUtils.js";
-
-function createGeometry({ width, height, depth, dimensions }) {
-  let geometries = [];
-  const cubeGeo = new BoxGeometry(width - 0.1, height - 0.1, depth - 0.1);
-
-  geometries.push(cubeGeo);
-
-  for (let i = 0; i < dimensions.x; i++) {
-    for (let j = 0; j < dimensions.z; j++) {
-      const cylinder = new CylinderGeometry(knobSize, knobSize, knobSize, 20);
-      const x = base * i - ((dimensions.x - 1) * base) / 2;
-      const y = base / 1.5; // TODO to be reworked
-      const z = base * j - ((dimensions.z - 1) * base) / 2;
-      cylinder.translate(x, y, z);
-      geometries.push(cylinder);
-    }
-  }
-
-  const brickGeometry = mergeBufferGeometries(geometries);
-  return brickGeometry;
-}
+import { Vector3, Box3 } from "three";
 
 export const Brick = ({
   intersect,
@@ -41,8 +19,6 @@ export const Brick = ({
   mouseMove = () => {},
 }) => {
   const brickRef = useRef();
-
-  console.log(intersect);
 
   const { height, width, depth } = getMeasurementsFromDimensions(dimensions);
   const brickGeometry = useMemo(() => {
