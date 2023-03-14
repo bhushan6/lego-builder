@@ -1,34 +1,60 @@
-import React, { useEffect, useState, useRef } from "react";
-import { Shadow, Brick, BrickCursor, Lights, Workspace } from ".";
+import React, { useEffect, useRef, useState } from "react";
+import { Brick, BrickCursor, Lights, Workspace } from ".";
 import { Vector3, Box3 } from "three";
-import { uID, getMeasurementsFromDimensions, base } from "../utils";
+import {
+  uID,
+  getMeasurementsFromDimensions,
+  base,
+  useAnchorShorcuts,
+} from "../utils";
 import { useControls } from "leva";
+import useStore from "../store";
+// import { ContactShadows } from "@react-three/drei";
 
 let t;
 
 export const Scene = () => {
+  // const bricks = useStore((state) => state.bricksState);
+  // const setBricks = useStore((state) => state.setBricks);
+
   const [bricks, setBricks] = useState([]);
 
   const bricksBoundBox = useRef([]);
 
   const brickCursorRef = useRef();
 
-  const { width, depth, rotate, color } = useControls({
-    width: {
-      value: 1,
-      min: 1,
-      max: 5,
-      step: 1,
-    },
-    depth: {
-      value: 1,
-      min: 1,
-      max: 5,
-      step: 1,
-    },
-    rotate: false,
-    color: "#f00",
-  });
+  const [{ width, depth, rotate, color, anchorX, anchorZ }, set] = useControls(
+    () => ({
+      width: {
+        value: 1,
+        min: 1,
+        max: 5,
+        step: 1,
+      },
+      depth: {
+        value: 1,
+        min: 1,
+        max: 5,
+        step: 1,
+      },
+      rotate: false,
+      color: "#ff0",
+      anchorX: {
+        value: 0,
+        min: -2,
+        max: 2,
+        step: 1,
+      },
+      anchorZ: {
+        value: 0,
+        min: -2,
+        max: 2,
+        step: 1,
+      },
+    })
+  );
+
+  useAnchorShorcuts(anchorX, anchorZ, set);
 
   const addBrick = (e) => {
     e.stopPropagation();
@@ -53,7 +79,7 @@ export const Scene = () => {
         const collision =
           boundingBoxOfBrickToBeAdded.intersectsBox(brickBoundingBox);
 
-        console.log(collision);
+        console.log(collision, brickBoundingBox, boundingBoxOfBrickToBeAdded);
 
         if (collision) {
           const dx = Math.abs(
@@ -82,16 +108,18 @@ export const Scene = () => {
           dimensions: { x: width, z: depth },
           rotation: rotate ? Math.PI / 2 : 0,
           color: color,
+          translation: { x: anchorX, z: anchorZ },
         };
 
-        setBricks((prevState) => [...prevState, brickData]);
+        // setBricks(brickData);
+        setBricks((prevBricks) => [...prevBricks, brickData]);
       }
     } else {
       isDrag.current = false;
     }
   };
 
-  const mouseMove = (e) => {
+  const setBrickCursorPosition = (e) => {
     e.stopPropagation();
     if (!brickCursorRef.current) return;
 
@@ -118,6 +146,14 @@ export const Scene = () => {
           evenDepth ? base : base / 2
         )
       );
+  };
+
+  const onClick = (e) => {
+    addBrick(e);
+  };
+
+  const mouseMove = (e) => {
+    setBrickCursorPosition(e);
   };
 
   const isDrag = useRef(false);
@@ -152,22 +188,23 @@ export const Scene = () => {
             key={b.uID}
             dimensions={b.dimensions}
             intersect={b.intersect}
-            addBrick={addBrick}
+            onClick={onClick}
             rotation={b.rotation}
             bricksBoundBox={bricksBoundBox}
             uID={b.uID}
             mouseMove={mouseMove}
             color={b.color}
+            translation={b.translation}
           />
         );
       })}
-      <Shadow />
       <Lights />
-      <Workspace addBrick={addBrick} mouseMove={mouseMove} />
+      <Workspace onClick={onClick} mouseMove={mouseMove} />
       <BrickCursor
         ref={brickCursorRef}
         rotation={rotate ? Math.PI / 2 : 0}
         dimensions={{ x: width, z: depth }}
+        translation={{ x: anchorX, z: anchorZ }}
       />
     </>
   );

@@ -1,27 +1,28 @@
 import "./App.css";
 import { OrbitControls } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
-import { Suspense } from "react";
+import { Suspense, useEffect } from "react";
 import { LinearToneMapping } from "three";
 import { InfoPanel, Scene } from "./components";
+import useStore from "./store";
 
-function App() {
+const LegoRoom = () => {
   return (
-    <div className="App">
+    <>
       <Canvas
-        gl={{
-          alpha: false,
-          antialias: false,
-          powerPreference: "high-performance",
-          toneMapping: LinearToneMapping,
-        }}
+        // gl={{
+        //   alpha: false,
+        //   antialias: false,
+        //   powerPreference: "high-performance",
+        //   toneMapping: LinearToneMapping,
+        // }}
         camera={{
           position: [17.43, 657.76, 943.51],
           near: 0.1,
           far: 20000,
         }}
-        colorManagement={true}
-        shadowMap={true} // highlight-line
+        colorManagement
+        shadows
         dpr={Math.min(2, window.devicePixelRatio)}
       >
         <Suspense fallback={null}>
@@ -30,6 +31,33 @@ function App() {
         </Suspense>
       </Canvas>
       <InfoPanel />
+    </>
+  );
+};
+
+function App() {
+  // const enterRoom = useStore((state) => state.liveblocks.enterRoom);
+  // const leaveRoom = useStore((state) => state.liveblocks.leaveRoom);
+  // const isLoading = useStore((state) => state.liveblocks.isStorageLoading);
+
+  // useEffect(() => {
+  //   enterRoom("lego-demo-room");
+  //   return () => {
+  //     leaveRoom("lego-demo-room");
+  //   };
+  // }, [enterRoom, leaveRoom]);
+
+  // if (isLoading) {
+  //   return (
+  //     <>
+  //       <h1>Loading.....</h1>
+  //     </>
+  //   );
+  // }
+
+  return (
+    <div className="App">
+      <LegoRoom />
     </div>
   );
 }

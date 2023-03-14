@@ -1,6 +1,9 @@
 import React from "react";
+import useStore from "../store/index";
 
 export const InfoPanel = () => {
+  const clearBricks = useStore((state) => state.clearBricks);
+
   return (
     <div
       style={{
@@ -13,7 +16,8 @@ export const InfoPanel = () => {
         width: "200px",
       }}
     >
-      Use panel on right top corner to customize the Lego Bricks Properties
+      {/* Use panel on right top corner to customize the Lego Bricks Properties */}
+      <button onClick={clearBricks}>Clear Scene</button>
     </div>
   );
 };

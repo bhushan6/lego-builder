@@ -1,4 +1,3 @@
-import { useThree } from "@react-three/fiber";
 import React, { forwardRef, useMemo } from "react";
 import { Vector3 } from "three";
 import { getMeasurementsFromDimensions, base } from "../utils";
@@ -12,7 +11,7 @@ export const BrickCursor = forwardRef(
       },
       dimensions = { x: 1, z: 1 },
       rotation = 0,
-      translation = 0,
+      translation = { x: 0, z: 0 },
     },
     ref
   ) => {
@@ -37,18 +36,45 @@ export const BrickCursor = forwardRef(
         );
     }, [intersect, height, rotation, width, depth]);
 
+    const compansateX =
+      dimensions.x % 2 === 0 ? dimensions.x / 2 : (dimensions.x - 1) / 2;
+    const compansateZ =
+      dimensions.z % 2 === 0 ? dimensions.z / 2 : (dimensions.z - 1) / 2;
+
+    const offsetX =
+      Math.sign(translation.x) < 0
+        ? Math.max(translation.x, -compansateX)
+        : Math.min(translation.x, compansateX);
+
+    const offsetZ =
+      Math.sign(translation.z) < 0
+        ? Math.max(translation.z, -compansateZ)
+        : Math.min(translation.z, compansateZ);
+
     return (
       <>
-        <mesh
+        <group
           ref={ref}
           position={[position.x, Math.abs(position.y), position.z]}
           rotation={[0, rotation, 0]}
-          castShadow={true}
-          receiveShadow={true}
         >
-          <boxGeometry args={[width, height, depth]} />
-          <meshBasicMaterial color={"black"} transparent={true} opacity={0.3} />
-        </mesh>
+          <mesh
+            position={[
+              (offsetX * width) / dimensions.x,
+              0,
+              (offsetZ * width) / dimensions.z,
+            ]}
+            castShadow={true}
+            receiveShadow={true}
+          >
+            <boxGeometry args={[width, height, depth]} />
+            <meshBasicMaterial
+              color={"black"}
+              transparent={true}
+              opacity={0.3}
+            />
+          </mesh>
+        </group>
       </>
     );
   }
