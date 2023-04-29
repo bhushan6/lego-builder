@@ -12,8 +12,8 @@ export const Brick = ({
   color = "#ff0000",
   dimensions = { x: 1, z: 1 },
   rotation = 0,
-  translation = 0,
-  addBrick = () => {},
+  translation = { x: 0, z: 0 },
+  onClick = () => {},
   bricksBoundBox = { current: [] },
   uID = "",
   mouseMove = () => {},
@@ -54,28 +54,53 @@ export const Brick = ({
     boundingBoxRef.push({ uID, brickBoundingBox });
 
     return () => {
-      boundingBoxRef.filter((brick) => brick.uID !== uID);
+      boundingBoxRef.filter((brick) => {
+        return brick.uID !== uID;
+      });
     };
-  }, [uID, bricksBoundBox]);
+  }, []);
+
+  const compansateX =
+    dimensions.x % 2 === 0 ? dimensions.x / 2 : (dimensions.x - 1) / 2;
+  const compansateZ =
+    dimensions.z % 2 === 0 ? dimensions.z / 2 : (dimensions.z - 1) / 2;
+
+  const offsetX =
+    Math.sign(translation.x) < 0
+      ? Math.max(translation.x, -compansateX)
+      : Math.min(translation.x, compansateX);
+
+  const offsetZ =
+    Math.sign(translation.z) < 0
+      ? Math.max(translation.z, -compansateZ)
+      : Math.min(translation.z, compansateZ);
 
   return (
     <>
-      <mesh
+      <group
         ref={brickRef}
-        onClick={addBrick}
-        position={[position.x, Math.abs(position.y), position.z]}
         rotation={[0, rotation, 0]}
-        castShadow={true}
-        receiveShadow={true}
-        geometry={brickGeometry}
-        onPointerMove={mouseMove}
+        position={[position.x, Math.abs(position.y), position.z]}
       >
-        <meshStandardMaterial
-          color={CSSToHex(color)}
-          metalness={0.4}
-          roughness={0.5}
-        />
-      </mesh>
+        <mesh
+          castShadow
+          receiveShadow
+          position={[
+            (offsetX * width) / dimensions.x,
+            0.5,
+            (offsetZ * depth) / dimensions.z,
+          ]}
+          onClick={onClick}
+          geometry={brickGeometry}
+          onPointerMove={mouseMove}
+        >
+          <meshStandardMaterial
+            color={CSSToHex(color)}
+            metalness={0.4}
+            roughness={0.5}
+          />
+        </mesh>
+      </group>
     </>
   );
 };

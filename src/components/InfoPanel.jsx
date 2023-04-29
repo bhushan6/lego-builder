@@ -13,7 +13,9 @@ export const InfoPanel = () => {
         width: "200px",
       }}
     >
-      Use panel on right top corner to customize the Lego Bricks Properties
+      Use panel on right top corner to customize the Lego Bricks Properties Use
+      <br />
+      "AWSD" to chnage the anchor points of bricks
     </div>
   );
 };

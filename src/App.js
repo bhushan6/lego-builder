@@ -5,9 +5,9 @@ import { Suspense } from "react";
 import { LinearToneMapping } from "three";
 import { InfoPanel, Scene } from "./components";
 
-function App() {
+const LegoRoom = () => {
   return (
-    <div className="App">
+    <>
       <Canvas
         gl={{
           alpha: false,
@@ -20,8 +20,8 @@ function App() {
           near: 0.1,
           far: 20000,
         }}
-        colorManagement={true}
-        shadowMap={true} // highlight-line
+        colorManagement
+        shadows
         dpr={Math.min(2, window.devicePixelRatio)}
       >
         <Suspense fallback={null}>
@@ -30,6 +30,14 @@ function App() {
         </Suspense>
       </Canvas>
       <InfoPanel />
+    </>
+  );
+};
+
+function App() {
+  return (
+    <div className="App">
+      <LegoRoom />
     </div>
   );
 }
