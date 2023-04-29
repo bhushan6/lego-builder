@@ -8,15 +8,10 @@ import {
   useAnchorShorcuts,
 } from "../utils";
 import { useControls } from "leva";
-import useStore from "../store";
-// import { ContactShadows } from "@react-three/drei";
 
 let t;
 
 export const Scene = () => {
-  // const bricks = useStore((state) => state.bricksState);
-  // const setBricks = useStore((state) => state.setBricks);
-
   const [bricks, setBricks] = useState([]);
 
   const bricksBoundBox = useRef([]);
@@ -111,7 +106,6 @@ export const Scene = () => {
           translation: { x: anchorX, z: anchorZ },
         };
 
-        // setBricks(brickData);
         setBricks((prevBricks) => [...prevBricks, brickData]);
       }
     } else {

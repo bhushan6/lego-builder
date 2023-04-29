@@ -64,8 +64,6 @@ export const BrickCursor = forwardRef(
               0,
               (offsetZ * width) / dimensions.z,
             ]}
-            castShadow={true}
-            receiveShadow={true}
           >
             <boxGeometry args={[width, height, depth]} />
             <meshBasicMaterial
