@@ -4,8 +4,10 @@ import {
   getMeasurementsFromDimensions,
   base,
   createGeometry,
+  knobSize,
 } from "../utils";
-import { Vector3, Box3 } from "three";
+import { Vector3, Box3, BackSide } from "three";
+import { useSelect } from "@react-three/drei";
 
 export const Brick = ({
   intersect,
@@ -13,16 +15,33 @@ export const Brick = ({
   dimensions = { x: 1, z: 1 },
   rotation = 0,
   translation = { x: 0, z: 0 },
-  onClick = () => {},
+  // onClick = () => {},
   bricksBoundBox = { current: [] },
   uID = "",
   mouseMove = () => {},
 }) => {
+  // const [{}, set] = useControls(() => ({
+  //   Delete: button((get) => {
+  //     deleteSelectedBrick();
+  //   }),
+  // }));
+
   const brickRef = useRef();
 
   const { height, width, depth } = getMeasurementsFromDimensions(dimensions);
+
   const brickGeometry = useMemo(() => {
     return createGeometry({ width, height, depth, dimensions });
+  }, [width, height, depth, dimensions]);
+
+  const outlineGeometry = useMemo(() => {
+    return createGeometry({
+      width: width + 2.6,
+      height: height + 2.6,
+      depth: depth + 2.6,
+      dimensions,
+      knobDim: knobSize + 1.2,
+    });
   }, [width, height, depth, dimensions]);
 
   const position = useMemo(() => {
@@ -49,16 +68,19 @@ export const Brick = ({
   useEffect(() => {
     const brickBoundingBox = new Box3().setFromObject(brickRef.current);
 
-    const boundingBoxRef = bricksBoundBox.current;
-
-    boundingBoxRef.push({ uID, brickBoundingBox });
+    bricksBoundBox.current.push({ uID, brickBoundingBox });
 
     return () => {
-      boundingBoxRef.filter((brick) => {
-        return brick.uID !== uID;
-      });
+      const newA = [];
+      for (let i = 0; i < bricksBoundBox.current.length; i++) {
+        const element = bricksBoundBox.current[i];
+        if (element.uID !== uID) {
+          newA.push(element);
+        }
+      }
+      bricksBoundBox.current = newA;
     };
-  }, []);
+  }, [uID, bricksBoundBox]);
 
   const compansateX =
     dimensions.x % 2 === 0 ? dimensions.x / 2 : (dimensions.x - 1) / 2;
@@ -75,6 +97,9 @@ export const Brick = ({
       ? Math.max(translation.z, -compansateZ)
       : Math.min(translation.z, compansateZ);
 
+  const selected = useSelect().map((sel) => sel.userData.uID);
+  const isSelected = !!selected.find((sel) => sel === uID);
+
   return (
     <>
       <group
@@ -85,12 +110,13 @@ export const Brick = ({
         <mesh
           castShadow
           receiveShadow
+          userData={{ uID }}
           position={[
             (offsetX * width) / dimensions.x,
             0.5,
             (offsetZ * depth) / dimensions.z,
           ]}
-          onClick={onClick}
+          // onClick={onClick}
           geometry={brickGeometry}
           onPointerMove={mouseMove}
         >
@@ -100,6 +126,18 @@ export const Brick = ({
             roughness={0.5}
           />
         </mesh>
+        {isSelected && (
+          <mesh
+            position={[
+              (offsetX * width) / dimensions.x,
+              0.5,
+              (offsetZ * depth) / dimensions.z,
+            ]}
+            geometry={outlineGeometry}
+          >
+            <meshBasicMaterial color={"white"} side={BackSide} />
+          </mesh>
+        )}
       </group>
     </>
   );

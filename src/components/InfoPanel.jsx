@@ -11,6 +11,7 @@ export const InfoPanel = () => {
         fontFamily: "sans-serif",
         padding: "10px",
         width: "200px",
+        color: "white",
       }}
     >
       Use panel on right top corner to customize the Lego Bricks Properties Use

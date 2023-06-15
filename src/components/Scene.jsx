@@ -7,7 +7,8 @@ import {
   base,
   useAnchorShorcuts,
 } from "../utils";
-import { useControls } from "leva";
+import { button, useControls } from "leva";
+import { Select } from "@react-three/drei";
 
 let t;
 
@@ -18,8 +19,8 @@ export const Scene = () => {
 
   const brickCursorRef = useRef();
 
-  const [{ width, depth, rotate, color, anchorX, anchorZ }, set] = useControls(
-    () => ({
+  const [{ width, depth, rotate, color, anchorX, anchorZ, Edit }, set] =
+    useControls(() => ({
       width: {
         value: 1,
         min: 1,
@@ -46,15 +47,27 @@ export const Scene = () => {
         max: 2,
         step: 1,
       },
-    })
-  );
+      Undo: button((get) => {
+        undoAddedBrick();
+      }),
+      Edit: false,
+    }));
 
   useAnchorShorcuts(anchorX, anchorZ, set);
+
+  function undoAddedBrick() {
+    setBricks((prevBricks) => {
+      prevBricks.pop();
+      return [...prevBricks];
+    });
+  }
 
   const addBrick = (e) => {
     e.stopPropagation();
 
-    if (!e.face || !e.face.normal || !e.point) return;
+    if (Edit) return;
+
+    if (!e.face?.normal || !e.point) return;
 
     if (!brickCursorRef.current) return;
 
@@ -73,8 +86,6 @@ export const Scene = () => {
         const brickBoundingBox = bricksBoundBox.current[index].brickBoundingBox;
         const collision =
           boundingBoxOfBrickToBeAdded.intersectsBox(brickBoundingBox);
-
-        console.log(collision, brickBoundingBox, boundingBoxOfBrickToBeAdded);
 
         if (collision) {
           const dx = Math.abs(
@@ -115,6 +126,7 @@ export const Scene = () => {
 
   const setBrickCursorPosition = (e) => {
     e.stopPropagation();
+    if (Edit) return;
     if (!brickCursorRef.current) return;
 
     const { height } = getMeasurementsFromDimensions({
@@ -175,26 +187,29 @@ export const Scene = () => {
 
   return (
     <>
-      <color attach="background" args={["#ffffff"]} />
-      {bricks.map((b, i) => {
-        return (
-          <Brick
-            key={b.uID}
-            dimensions={b.dimensions}
-            intersect={b.intersect}
-            onClick={onClick}
-            rotation={b.rotation}
-            bricksBoundBox={bricksBoundBox}
-            uID={b.uID}
-            mouseMove={mouseMove}
-            color={b.color}
-            translation={b.translation}
-          />
-        );
-      })}
+      <color attach="background" args={["#202025"]} />
+      <Select box multiple onChange={console.log}>
+        {bricks.map((b, i) => {
+          return (
+            <Brick
+              key={b.uID}
+              dimensions={b.dimensions}
+              intersect={b.intersect}
+              onClick={onClick}
+              rotation={b.rotation}
+              bricksBoundBox={bricksBoundBox}
+              uID={b.uID}
+              mouseMove={mouseMove}
+              color={b.color}
+              translation={b.translation}
+            />
+          );
+        })}
+      </Select>
       <Lights />
       <Workspace onClick={onClick} mouseMove={mouseMove} />
       <BrickCursor
+        visible={Edit ? false : true}
         ref={brickCursorRef}
         rotation={rotate ? Math.PI / 2 : 0}
         dimensions={{ x: width, z: depth }}

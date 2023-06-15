@@ -12,6 +12,7 @@ export const BrickCursor = forwardRef(
       dimensions = { x: 1, z: 1 },
       rotation = 0,
       translation = { x: 0, z: 0 },
+      visible = true,
     },
     ref
   ) => {
@@ -57,6 +58,7 @@ export const BrickCursor = forwardRef(
           ref={ref}
           position={[position.x, Math.abs(position.y), position.z]}
           rotation={[0, rotation, 0]}
+          visible={visible}
         >
           <mesh
             position={[

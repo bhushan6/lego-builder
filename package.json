@@ -7,6 +7,7 @@
     "@liveblocks/zustand": "^1.0.1",
     "@react-three/drei": "^9.57.0",
     "@react-three/fiber": "^8.11.6",
+    "@react-three/postprocessing": "^2.14.10",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
@@ -15,6 +16,7 @@
     "react-dom": "^18.2.0",
     "react-scripts": "5.0.1",
     "three": "^0.150.1",
+    "three-stdlib": "^2.23.10",
     "use-keyboard-shortcut": "^1.1.6",
     "web-vitals": "^2.1.4",
     "zustand": "^4.3.6"

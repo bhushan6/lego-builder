@@ -20,7 +20,7 @@ const LegoRoom = () => {
           near: 0.1,
           far: 20000,
         }}
-        colorManagement
+        colormanagement
         shadows
         dpr={Math.min(2, window.devicePixelRatio)}
       >

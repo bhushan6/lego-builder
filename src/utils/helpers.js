@@ -18,7 +18,13 @@ export function mergeMeshes(geometries) {
   return mergeBufferGeometries(geometries);
 }
 
-export function createGeometry({ width, height, depth, dimensions }) {
+export function createGeometry({
+  width,
+  height,
+  depth,
+  dimensions,
+  knobDim = knobSize,
+}) {
   let geometries = [];
   const cubeGeo = new BoxGeometry(width - 0.1, height - 0.1, depth - 0.1);
 
@@ -26,7 +32,7 @@ export function createGeometry({ width, height, depth, dimensions }) {
 
   for (let i = 0; i < dimensions.x; i++) {
     for (let j = 0; j < dimensions.z; j++) {
-      const cylinder = new CylinderGeometry(knobSize, knobSize, knobSize, 20);
+      const cylinder = new CylinderGeometry(knobDim, knobDim, knobDim, 20);
       const x = base * i - ((dimensions.x - 1) * base) / 2;
       const y = base / 1.5;
       const z = base * j - ((dimensions.z - 1) * base) / 2;
