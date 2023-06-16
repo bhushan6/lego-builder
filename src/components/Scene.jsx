@@ -9,6 +9,8 @@ import {
 } from "../utils";
 import { button, useControls } from "leva";
 import { Select } from "@react-three/drei";
+import DeleteBrick from "./DeleteBrick";
+import BrickOutline from "./BrickOutline";
 
 let t;
 
@@ -205,6 +207,8 @@ export const Scene = () => {
             />
           );
         })}
+        <DeleteBrick setBricks={setBricks} />
+        <BrickOutline />
       </Select>
       <Lights />
       <Workspace onClick={onClick} mouseMove={mouseMove} />

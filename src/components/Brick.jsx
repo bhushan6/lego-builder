@@ -5,6 +5,7 @@ import {
   base,
   createGeometry,
   knobSize,
+  outlineWidth,
 } from "../utils";
 import { Vector3, Box3, BackSide } from "three";
 import { useSelect } from "@react-three/drei";
@@ -15,17 +16,10 @@ export const Brick = ({
   dimensions = { x: 1, z: 1 },
   rotation = 0,
   translation = { x: 0, z: 0 },
-  // onClick = () => {},
   bricksBoundBox = { current: [] },
   uID = "",
   mouseMove = () => {},
 }) => {
-  // const [{}, set] = useControls(() => ({
-  //   Delete: button((get) => {
-  //     deleteSelectedBrick();
-  //   }),
-  // }));
-
   const brickRef = useRef();
 
   const { height, width, depth } = getMeasurementsFromDimensions(dimensions);
@@ -36,11 +30,11 @@ export const Brick = ({
 
   const outlineGeometry = useMemo(() => {
     return createGeometry({
-      width: width + 2.6,
-      height: height + 2.6,
-      depth: depth + 2.6,
+      width: width + outlineWidth * 2,
+      height: height + outlineWidth * 2,
+      depth: depth + outlineWidth * 2,
       dimensions,
-      knobDim: knobSize + 1.2,
+      knobDim: knobSize + outlineWidth,
     });
   }, [width, height, depth, dimensions]);
 
@@ -82,20 +76,21 @@ export const Brick = ({
     };
   }, [uID, bricksBoundBox]);
 
-  const compansateX =
-    dimensions.x % 2 === 0 ? dimensions.x / 2 : (dimensions.x - 1) / 2;
-  const compansateZ =
-    dimensions.z % 2 === 0 ? dimensions.z / 2 : (dimensions.z - 1) / 2;
+  const compansate = {
+    x: dimensions.x % 2 === 0 ? dimensions.x / 2 : (dimensions.x - 1) / 2,
+    z: dimensions.z % 2 === 0 ? dimensions.z / 2 : (dimensions.z - 1) / 2,
+  };
 
-  const offsetX =
-    Math.sign(translation.x) < 0
-      ? Math.max(translation.x, -compansateX)
-      : Math.min(translation.x, compansateX);
-
-  const offsetZ =
-    Math.sign(translation.z) < 0
-      ? Math.max(translation.z, -compansateZ)
-      : Math.min(translation.z, compansateZ);
+  const offset = {
+    x:
+      Math.sign(translation.x) < 0
+        ? Math.max(translation.x, -compansate.x)
+        : Math.min(translation.x, compansate.x),
+    z:
+      Math.sign(translation.z) < 0
+        ? Math.max(translation.z, -compansate.z)
+        : Math.min(translation.z, compansate.z),
+  };
 
   const selected = useSelect().map((sel) => sel.userData.uID);
   const isSelected = !!selected.find((sel) => sel === uID);
@@ -110,11 +105,18 @@ export const Brick = ({
         <mesh
           castShadow
           receiveShadow
-          userData={{ uID }}
+          userData={{
+            uID,
+            dimensions,
+            offset,
+            width,
+            depth,
+            type: `${dimensions.x}-${dimensions.z}`,
+          }}
           position={[
-            (offsetX * width) / dimensions.x,
+            (offset.x * width) / dimensions.x,
             0.5,
-            (offsetZ * depth) / dimensions.z,
+            (offset.z * depth) / dimensions.z,
           ]}
           // onClick={onClick}
           geometry={brickGeometry}
@@ -129,9 +131,9 @@ export const Brick = ({
         {isSelected && (
           <mesh
             position={[
-              (offsetX * width) / dimensions.x,
+              (offset.x * width) / dimensions.x,
               0.5,
-              (offsetZ * depth) / dimensions.z,
+              (offset.z * depth) / dimensions.z,
             ]}
             geometry={outlineGeometry}
           >
