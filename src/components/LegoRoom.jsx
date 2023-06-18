@@ -3,6 +3,7 @@ import React, { Suspense } from "react";
 import { LinearToneMapping } from "three";
 import ControlsWrapper from "./ControlsWrapper";
 import { Scene, InfoPanel } from ".";
+import DialogBox from "./UI/DialogBox";
 
 const LegoRoom = () => {
   return (
@@ -28,7 +29,8 @@ const LegoRoom = () => {
           <ControlsWrapper />
         </Suspense>
       </Canvas>
-      <InfoPanel />
+      {/* <InfoPanel /> */}
+      <DialogBox />
     </>
   );
 };
