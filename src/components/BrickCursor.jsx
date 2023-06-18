@@ -69,7 +69,7 @@ export const BrickCursor = forwardRef(
           >
             <boxGeometry args={[width, height, depth]} />
             <meshBasicMaterial
-              color={"black"}
+              color={"white"}
               transparent={true}
               opacity={0.3}
             />

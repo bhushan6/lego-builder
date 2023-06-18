@@ -4,10 +4,8 @@ import {
   getMeasurementsFromDimensions,
   base,
   createGeometry,
-  knobSize,
-  outlineWidth,
 } from "../utils";
-import { Vector3, Box3, BackSide } from "three";
+import { Vector3, Box3 } from "three";
 import { useSelect } from "@react-three/drei";
 
 export const Brick = ({
@@ -18,6 +16,7 @@ export const Brick = ({
   translation = { x: 0, z: 0 },
   bricksBoundBox = { current: [] },
   uID = "",
+  onClick = () => {},
   mouseMove = () => {},
 }) => {
   const brickRef = useRef();
@@ -26,16 +25,6 @@ export const Brick = ({
 
   const brickGeometry = useMemo(() => {
     return createGeometry({ width, height, depth, dimensions });
-  }, [width, height, depth, dimensions]);
-
-  const outlineGeometry = useMemo(() => {
-    return createGeometry({
-      width: width + outlineWidth * 2,
-      height: height + outlineWidth * 2,
-      depth: depth + outlineWidth * 2,
-      dimensions,
-      knobDim: knobSize + outlineWidth,
-    });
   }, [width, height, depth, dimensions]);
 
   const position = useMemo(() => {
@@ -92,9 +81,6 @@ export const Brick = ({
         : Math.min(translation.z, compansate.z),
   };
 
-  const selected = useSelect().map((sel) => sel.userData.uID);
-  const isSelected = !!selected.find((sel) => sel === uID);
-
   return (
     <>
       <group
@@ -112,13 +98,16 @@ export const Brick = ({
             width,
             depth,
             type: `${dimensions.x}-${dimensions.z}`,
+            position,
+            rotation,
+            translation,
           }}
           position={[
             (offset.x * width) / dimensions.x,
             0.5,
             (offset.z * depth) / dimensions.z,
           ]}
-          // onClick={onClick}
+          onClick={onClick}
           geometry={brickGeometry}
           onPointerMove={mouseMove}
         >
@@ -128,18 +117,6 @@ export const Brick = ({
             roughness={0.5}
           />
         </mesh>
-        {isSelected && (
-          <mesh
-            position={[
-              (offset.x * width) / dimensions.x,
-              0.5,
-              (offset.z * depth) / dimensions.z,
-            ]}
-            geometry={outlineGeometry}
-          >
-            <meshBasicMaterial color={"white"} side={BackSide} />
-          </mesh>
-        )}
       </group>
     </>
   );

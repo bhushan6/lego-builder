@@ -8,11 +8,10 @@ import {
   useAnchorShorcuts,
 } from "../utils";
 import { button, useControls } from "leva";
-import { Select } from "@react-three/drei";
+import { Select, useSetSelection } from "../Select/Index";
 import DeleteBrick from "./DeleteBrick";
 import BrickOutline from "./BrickOutline";
-
-let t;
+// import Translate from "./Translate";
 
 export const Scene = () => {
   const [bricks, setBricks] = useState([]);
@@ -57,7 +56,10 @@ export const Scene = () => {
 
   useAnchorShorcuts(anchorX, anchorZ, set);
 
+  const setSelection = useSetSelection();
+
   function undoAddedBrick() {
+    setSelection({}); // this should unselect the bricks but Doesn't work for now because of undo is button within leva
     setBricks((prevBricks) => {
       prevBricks.pop();
       return [...prevBricks];
@@ -157,7 +159,7 @@ export const Scene = () => {
   };
 
   const onClick = (e) => {
-    addBrick(e);
+    if (!Edit) addBrick(e);
   };
 
   const mouseMove = (e) => {
@@ -165,17 +167,18 @@ export const Scene = () => {
   };
 
   const isDrag = useRef(false);
+  const timeoutID = useRef(null);
 
   useEffect(() => {
     const down = () => {
-      t && clearTimeout(t);
-      t = setTimeout(() => {
+      timeoutID.current && clearTimeout(timeoutID.current);
+      timeoutID.current = setTimeout(() => {
         isDrag.current = true;
       }, 300);
     };
 
     const up = () => {
-      t && clearTimeout(t);
+      timeoutID.current && clearTimeout(timeoutID.current);
     };
 
     window.addEventListener("pointerdown", down);
@@ -190,7 +193,7 @@ export const Scene = () => {
   return (
     <>
       <color attach="background" args={["#202025"]} />
-      <Select box multiple onChange={console.log}>
+      <Select enable={Edit} box multiple onChange={console.log}>
         {bricks.map((b, i) => {
           return (
             <Brick
@@ -209,6 +212,7 @@ export const Scene = () => {
         })}
         <DeleteBrick setBricks={setBricks} />
         <BrickOutline />
+        {/* <Translate /> */}
       </Select>
       <Lights />
       <Workspace onClick={onClick} mouseMove={mouseMove} />

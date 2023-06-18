@@ -44,9 +44,9 @@ export const useAnchorShorcuts = (anchorX, anchorZ, set) => {
   return null;
 };
 
-export const useDeleteShortcut = (selected, setBricks) => {
+export const useDeleteShortcut = (selected, setBricks, onDelete) => {
   const deleteSelectedBricks = () => {
-    console.log("DELETE");
+    const deletedBricks = [];
     setBricks((bricks) =>
       bricks.filter((brick) => {
         const selectedClone = [...selected];
@@ -56,12 +56,14 @@ export const useDeleteShortcut = (selected, setBricks) => {
           const selectedUID = selectedClone[i];
           if (uID === selectedUID) {
             should = false;
-            selectedClone.splice(i, 1);
+            const deleted = selectedClone.splice(i, 1);
+            deletedBricks.push(deleted);
           }
         }
         return should;
       })
     );
+    onDelete(deletedBricks);
   };
 
   useKeyboardShortcut(["Delete"], deleteSelectedBricks, {

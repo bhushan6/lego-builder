@@ -1,9 +1,79 @@
-import { useSelect } from "@react-three/drei";
-import React, { useMemo } from "react";
+import { useSelect } from "../Select/Index";
+import React, { useLayoutEffect, useMemo, useRef } from "react";
+import {
+  createGeometry,
+  getMeasurementsFromDimensions,
+  knobSize,
+  outlineWidth,
+} from "../utils";
+import { BackSide, Object3D } from "three";
+
+const dummy = new Object3D();
 
 const OutlineMesh = ({ meshesData }) => {
-  console.log(meshesData);
-  return <></>;
+  const ref = useRef();
+
+  const dimensions = meshesData[0]?.dimensions;
+
+  const { height, width, depth } = dimensions
+    ? getMeasurementsFromDimensions(dimensions)
+    : {};
+
+  const outlineGeometry = useMemo(() => {
+    return createGeometry({
+      width: width + outlineWidth * 2,
+      height: height + outlineWidth * 2,
+      depth: depth + outlineWidth * 2,
+      dimensions,
+      knobDim: knobSize + outlineWidth,
+    });
+  }, [width, height, depth, dimensions]);
+
+  const compansate = {
+    x: dimensions.x % 2 === 0 ? dimensions.x / 2 : (dimensions.x - 1) / 2,
+    z: dimensions.z % 2 === 0 ? dimensions.z / 2 : (dimensions.z - 1) / 2,
+  };
+
+  useLayoutEffect(() => {
+    if (!ref.current) return;
+
+    meshesData.forEach((meshData, i) => {
+      const translation = meshData.translation;
+
+      const offset = {
+        x:
+          Math.sign(translation.x) < 0
+            ? Math.max(translation.x, -compansate.x)
+            : Math.min(translation.x, compansate.x),
+        z:
+          Math.sign(translation.z) < 0
+            ? Math.max(translation.z, -compansate.z)
+            : Math.min(translation.z, compansate.z),
+      };
+
+      dummy.rotation.set(0, meshData.rotation, 0);
+      dummy.position.set(
+        meshData.position.x + offset.x,
+        Math.abs(meshData.position.y),
+        meshData.position.z + offset.z
+      );
+      dummy.updateMatrix();
+      ref.current.setMatrixAt(i, dummy.matrix);
+    });
+    ref.current.instanceMatrix.needsUpdate = true;
+  }, [meshesData]);
+
+  return (
+    <>
+      <instancedMesh
+        ref={ref}
+        position={[0, 0.5, 0]}
+        args={[outlineGeometry, null, meshesData.length]}
+      >
+        <meshBasicMaterial color={"white"} side={BackSide} />
+      </instancedMesh>
+    </>
+  );
 };
 
 const BrickOutline = () => {
@@ -14,44 +84,20 @@ const BrickOutline = () => {
 
     for (let i = 0; i < selected.length; i++) {
       const currentSelected = selected[i];
-      meshesAccrodingToType[currentSelected.type] = meshesAccrodingToType[
-        currentSelected.type
-      ]
-        ? [...meshesAccrodingToType[currentSelected.type], currentSelected]
-        : [currentSelected];
+      if (Object.keys(currentSelected).length > 0) {
+        meshesAccrodingToType[currentSelected.type] = meshesAccrodingToType[
+          currentSelected.type
+        ]
+          ? [...meshesAccrodingToType[currentSelected.type], currentSelected]
+          : [currentSelected];
+      }
     }
 
     return meshesAccrodingToType;
   }, [selected]);
 
-  //   const compansate = {
-  //     x: dimensions.x % 2 === 0 ? dimensions.x / 2 : (dimensions.x - 1) / 2,
-  //     z: dimensions.z % 2 === 0 ? dimensions.z / 2 : (dimensions.z - 1) / 2,
-  //   };
-
-  //   const offset = {
-  //     x:
-  //       Math.sign(translation.x) < 0
-  //         ? Math.max(translation.x, -compansate.x)
-  //         : Math.min(translation.x, compansate.x),
-  //     z:
-  //       Math.sign(translation.z) < 0
-  //         ? Math.max(translation.z, -compansate.z)
-  //         : Math.min(translation.z, compansate.z),
-  //   };
-
   return (
     <>
-      {/* <mesh
-        position={[
-          (offset.x * width) / dimensions.x,
-          0.5,
-          (offset.z * depth) / dimensions.z,
-        ]}
-        geometry={outlineGeometry}
-      >
-        <meshBasicMaterial color={"white"} side={BackSide} />
-      </mesh> */}
       {Object.entries(selectedMeshes).map(([key, value]) => (
         <OutlineMesh key={key} meshesData={value} />
       ))}
