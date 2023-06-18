@@ -4,7 +4,7 @@ import { Cross2Icon, InfoCircledIcon } from "@radix-ui/react-icons";
 import "./dialogbox.css";
 
 const DialogBox = () => (
-  <Dialog.Root>
+  <Dialog.Root defaultOpen={true}>
     <Dialog.Trigger asChild>
       <button
         style={{ position: "absolute", top: 0, left: 0, margin: "20px" }}
