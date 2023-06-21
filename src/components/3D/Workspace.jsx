@@ -2,34 +2,22 @@ import { Environment, Lightformer } from "@react-three/drei";
 import React, { useState } from "react";
 
 const gridSize = 60;
-const extraOffset = 4;
+// const extraOffset = 4;
 
 export const Workspace = ({ onClick = () => {}, mouseMove = () => {} }) => {
   const [workspaceSize, setWorkspaceSize] = useState(1500);
 
-  const adjustWorkspaceSize = (e) => {
-    if (
-      Math.abs(e.point.x) * 2 > workspaceSize ||
-      Math.abs(e.point.z) * 2 > workspaceSize
-    ) {
-      setWorkspaceSize(
-        (workspaceSize) => workspaceSize + gridSize * extraOffset
-      );
-    } else {
-      // if (
-      //   Math.max(Math.abs(e.point.x), Math.abs(e.point.z)) * 2 <
-      //   workspaceSize
-      // ) {
-      //   setWorkspaceSize((workspaceSize) => {
-      //     if (workspaceSize <= 1500) {
-      //       return workspaceSize;
-      //     } else {
-      //       return workspaceSize - gridSize * extraOffset;
-      //     }
-      //   });
-      // }
-    }
-  };
+  // const adjustWorkspaceSize = (e) => {
+  //   if (
+  //     Math.abs(e.point.x) * 2 > workspaceSize ||
+  //     Math.abs(e.point.z) * 2 > workspaceSize
+  //   ) {
+  //     setWorkspaceSize(
+  //       (workspaceSize) => workspaceSize + gridSize * extraOffset
+  //     );
+  //   } else {
+  //   }
+  // };
 
   return (
     <>
@@ -39,7 +27,7 @@ export const Workspace = ({ onClick = () => {}, mouseMove = () => {} }) => {
         onClick={onClick}
         onPointerMove={(e) => {
           mouseMove(e);
-          adjustWorkspaceSize(e);
+          // adjustWorkspaceSize(e);
         }}
       >
         <planeGeometry args={[workspaceSize, workspaceSize]} />

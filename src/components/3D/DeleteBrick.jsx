@@ -1,8 +1,8 @@
-import { useSelect, useSetSelection } from "../Select/Index";
+import { useSelect, useSetSelection } from ".";
 import React from "react";
-import { useDeleteShortcut } from "../utils";
+import { useDeleteShortcut } from "../../utils";
 
-const DeleteBrick = ({ setBricks }) => {
+export const DeleteBrick = ({ setBricks }) => {
   const selected = useSelect().map((sel) => sel.userData.uID);
   const setSelection = useSetSelection();
 
@@ -14,5 +14,3 @@ const DeleteBrick = ({ setBricks }) => {
 
   return <></>;
 };
-
-export default DeleteBrick;

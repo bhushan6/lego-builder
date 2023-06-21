@@ -3,7 +3,7 @@ import * as Dialog from "@radix-ui/react-dialog";
 import { Cross2Icon, InfoCircledIcon } from "@radix-ui/react-icons";
 import "./dialogbox.css";
 
-const DialogBox = () => (
+export const DialogBox = () => (
   <Dialog.Root defaultOpen={true}>
     <Dialog.Trigger asChild>
       <button
@@ -46,5 +46,3 @@ const DialogBox = () => (
     </Dialog.Portal>
   </Dialog.Root>
 );
-
-export default DialogBox;

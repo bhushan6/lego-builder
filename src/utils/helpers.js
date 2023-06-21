@@ -59,8 +59,9 @@ export function collisonXYZ(o1, o2) {
   if (
     Math.abs(o1.position.z - o2.position.z) >
     (o1.geometry.parameters.depth + o2.geometry.parameters.depth) / 2
-  )
+  ) {
     return false;
+  }
   return true;
 }
 

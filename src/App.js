@@ -1,5 +1,5 @@
 import "./App.css";
-import LegoRoom from "./components/LegoRoom";
+import { LegoRoom } from "./components/3D";
 
 function App() {
   return (

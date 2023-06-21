@@ -1,11 +1,11 @@
-import { useSelect } from "../Select/Index";
+import { useSelect } from ".";
 import React, { useLayoutEffect, useMemo, useRef } from "react";
 import {
   createGeometry,
   getMeasurementsFromDimensions,
   knobSize,
   outlineWidth,
-} from "../utils";
+} from "../../utils";
 import { BackSide, Object3D } from "three";
 
 const dummy = new Object3D();
@@ -76,7 +76,7 @@ const OutlineMesh = ({ meshesData }) => {
   );
 };
 
-const BrickOutline = () => {
+export const BrickOutline = () => {
   const selected = useSelect().map((sel) => sel.userData);
 
   const selectedMeshes = useMemo(() => {
@@ -104,5 +104,3 @@ const BrickOutline = () => {
     </>
   );
 };
-
-export default BrickOutline;

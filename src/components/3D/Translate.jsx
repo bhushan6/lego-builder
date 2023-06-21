@@ -1,11 +1,11 @@
 import React, { useEffect } from "react";
-import { useSelect } from "../Select/Index";
+import { useSelect } from ".";
 import { useControls } from "leva";
 import { Group } from "three";
 
 const group = new Group();
 
-const Translate = () => {
+export const Translate = () => {
   const [{ Translate }, set] = useControls(() => ({
     Translate: false,
   }));
@@ -29,5 +29,3 @@ const Translate = () => {
 
   return <></>;
 };
-
-export default Translate;

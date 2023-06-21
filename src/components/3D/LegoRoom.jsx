@@ -1,11 +1,11 @@
 import { Canvas } from "@react-three/fiber";
 import React, { Suspense } from "react";
 import { LinearToneMapping } from "three";
-import ControlsWrapper from "./ControlsWrapper";
-import { Scene, InfoPanel } from ".";
-import DialogBox from "./UI/DialogBox";
+import { ControlsWrapper, Scene } from ".";
+import { DialogBox } from "../UI";
+import { Perf } from "r3f-perf";
 
-const LegoRoom = () => {
+export const LegoRoom = () => {
   return (
     <>
       <Canvas
@@ -28,11 +28,9 @@ const LegoRoom = () => {
           <Scene />
           <ControlsWrapper />
         </Suspense>
+        <Perf position="bottom-left" />
       </Canvas>
-      {/* <InfoPanel /> */}
       <DialogBox />
     </>
   );
 };
-
-export default LegoRoom;

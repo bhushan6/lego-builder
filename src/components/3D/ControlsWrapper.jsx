@@ -3,7 +3,7 @@ import { useThree } from "@react-three/fiber";
 import { useControls } from "leva";
 import { OrbitControls } from "@react-three/drei";
 
-const ControlsWrapper = () => {
+export const ControlsWrapper = () => {
   const { setEvents, camera } = useThree();
 
   const [{ MultiSelect }, set] = useControls(() => ({
@@ -42,5 +42,3 @@ const ControlsWrapper = () => {
     />
   );
 };
-
-export default ControlsWrapper;

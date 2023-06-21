@@ -1,6 +1,6 @@
 import React, { forwardRef, useMemo } from "react";
 import { Vector3 } from "three";
-import { getMeasurementsFromDimensions, base } from "../utils";
+import { getMeasurementsFromDimensions, base } from "../../utils";
 
 export const BrickCursor = forwardRef(
   (

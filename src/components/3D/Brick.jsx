@@ -4,9 +4,8 @@ import {
   getMeasurementsFromDimensions,
   base,
   createGeometry,
-} from "../utils";
+} from "../../utils";
 import { Vector3, Box3 } from "three";
-import { useSelect } from "@react-three/drei";
 
 export const Brick = ({
   intersect,

@@ -6,12 +6,10 @@ import {
   getMeasurementsFromDimensions,
   base,
   useAnchorShorcuts,
-} from "../utils";
+} from "../../utils";
 import { button, useControls } from "leva";
-import { Select, useSetSelection } from "../Select/Index";
-import DeleteBrick from "./DeleteBrick";
-import BrickOutline from "./BrickOutline";
-// import Translate from "./Translate";
+import { BrickOutline, DeleteBrick, Select, useSetSelection } from ".";
+import { ChangeColor } from "./ChangeColor";
 
 export const Scene = () => {
   const [bricks, setBricks] = useState([]);
@@ -212,6 +210,7 @@ export const Scene = () => {
         })}
         <DeleteBrick setBricks={setBricks} />
         <BrickOutline />
+        <ChangeColor color={color} setBricks={setBricks} />
         {/* <Translate /> */}
       </Select>
       <Lights />
