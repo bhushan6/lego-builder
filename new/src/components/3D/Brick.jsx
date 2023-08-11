@@ -6,6 +6,7 @@ import {
   createGeometry,
 } from "../../utils";
 import { Vector3, Box3 } from "three";
+import { motion } from "framer-motion-3d";
 
 export const Brick = ({
   intersect,
@@ -82,10 +83,13 @@ export const Brick = ({
 
   return (
     <>
-      <group
+      <motion.group
         ref={brickRef}
         rotation={[0, rotation, 0]}
         position={[position.x, Math.abs(position.y), position.z]}
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ type: "spring", stiffness: 250, duration: 2 }}
       >
         <mesh
           castShadow
@@ -109,6 +113,7 @@ export const Brick = ({
           onClick={onClick}
           geometry={brickGeometry}
           onPointerMove={mouseMove}
+          transparent={true}
         >
           <meshStandardMaterial
             color={CSSToHex(color)}
@@ -116,7 +121,7 @@ export const Brick = ({
             roughness={0.5}
           />
         </mesh>
-      </group>
+      </motion.group>
     </>
   );
 };

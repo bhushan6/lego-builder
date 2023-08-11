@@ -1,23 +1,13 @@
+/* eslint-disable react/no-unknown-property */
+/* eslint-disable no-unused-vars */
+/* eslint-disable react/prop-types */
 import { Environment, Lightformer } from "@react-three/drei";
 import React, { useState } from "react";
 
-const gridSize = 60;
-// const extraOffset = 4;
-
 export const Workspace = ({ onClick = () => {}, mouseMove = () => {} }) => {
-  const [workspaceSize, setWorkspaceSize] = useState(1500);
+  const [workspaceSize, setWorkspaceSize] = useState(500);
 
-  // const adjustWorkspaceSize = (e) => {
-  //   if (
-  //     Math.abs(e.point.x) * 2 > workspaceSize ||
-  //     Math.abs(e.point.z) * 2 > workspaceSize
-  //   ) {
-  //     setWorkspaceSize(
-  //       (workspaceSize) => workspaceSize + gridSize * extraOffset
-  //     );
-  //   } else {
-  //   }
-  // };
+  const gridSize = workspaceSize / 25;
 
   return (
     <>
@@ -25,6 +15,7 @@ export const Workspace = ({ onClick = () => {}, mouseMove = () => {} }) => {
       <mesh
         rotation={[-Math.PI / 2, 0, 0]}
         onClick={onClick}
+        // position={[0, -0.5, 0]}
         onPointerMove={(e) => {
           mouseMove(e);
           // adjustWorkspaceSize(e);
@@ -33,7 +24,7 @@ export const Workspace = ({ onClick = () => {}, mouseMove = () => {} }) => {
         <planeGeometry args={[workspaceSize, workspaceSize]} />
         <meshBasicMaterial
           visible={false}
-          color={"red"}
+          color={"white"}
           opacity={0.4}
           transparent
         />
@@ -70,19 +61,6 @@ export const Workspace = ({ onClick = () => {}, mouseMove = () => {} }) => {
           />
         </group>
       </Environment>
-      {/* <EffectComposer disableNormalPass multisampling={0}> */}
-      {/* <N8AO color="red" aoRadius={2} intensity={1} /> */}
-      {/* <SSAO /> */}
-      {/* </EffectComposer> */}
-      {/* <BakeShadows /> */}
-      {/* <mesh
-        rotation={[-0.5 * Math.PI, 0, 0]}
-        position={[0, -1, 0]}
-        receiveShadow
-      >
-        <planeGeometry args={[3000, 3000, 1, 1]} />
-        <shadowMaterial color="red" />
-      </mesh> */}
     </>
   );
 };

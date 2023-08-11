@@ -1,5 +1,16 @@
-import React, { useEffect, useRef, useState } from "react";
-import { Brick, BrickCursor, Lights, Workspace } from ".";
+/* eslint-disable no-unused-vars */
+/* eslint-disable react/no-unknown-property */
+import { useEffect, useRef, useState } from "react";
+import {
+  Brick,
+  BrickCursor,
+  Lights,
+  Workspace,
+  BrickOutline,
+  DeleteBrick,
+  Select,
+  useSetSelection,
+} from ".";
 import { Vector3, Box3 } from "three";
 import {
   uID,
@@ -8,7 +19,6 @@ import {
   useAnchorShorcuts,
 } from "../../utils";
 import { button, useControls } from "leva";
-import { BrickOutline, DeleteBrick, Select, useSetSelection } from ".";
 import { ChangeColor } from "./ChangeColor";
 
 export const Scene = () => {
@@ -168,23 +178,23 @@ export const Scene = () => {
   const timeoutID = useRef(null);
 
   useEffect(() => {
-    const down = () => {
+    const pointerDown = () => {
       timeoutID.current && clearTimeout(timeoutID.current);
       timeoutID.current = setTimeout(() => {
         isDrag.current = true;
       }, 300);
     };
 
-    const up = () => {
+    const pointerUp = () => {
       timeoutID.current && clearTimeout(timeoutID.current);
     };
 
-    window.addEventListener("pointerdown", down);
-    window.addEventListener("pointerup", up);
+    window.addEventListener("pointerdown", pointerDown);
+    window.addEventListener("pointerup", pointerUp);
 
     return () => {
-      window.removeEventListener("pointerdown", down);
-      window.removeEventListener("pointerup", up);
+      window.removeEventListener("pointerdown", pointerDown);
+      window.removeEventListener("pointerup", pointerUp);
     };
   }, []);
 
@@ -196,22 +206,16 @@ export const Scene = () => {
           return (
             <Brick
               key={b.uID}
-              dimensions={b.dimensions}
-              intersect={b.intersect}
+              {...b}
               onClick={onClick}
-              rotation={b.rotation}
               bricksBoundBox={bricksBoundBox}
-              uID={b.uID}
               mouseMove={mouseMove}
-              color={b.color}
-              translation={b.translation}
             />
           );
         })}
         <DeleteBrick setBricks={setBricks} />
         <BrickOutline />
         <ChangeColor color={color} setBricks={setBricks} />
-        {/* <Translate /> */}
       </Select>
       <Lights />
       <Workspace onClick={onClick} mouseMove={mouseMove} />
