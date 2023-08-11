@@ -1,6 +1,7 @@
 export const base = 25;
 export const knobSize = 7;
 export const outlineWidth = 1.3;
+export const minWorkSpaceSize = 500;
 
 export const bricks = [
   { x: 1, z: 1 },

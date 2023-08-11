@@ -2,23 +2,23 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 import { Environment, Lightformer } from "@react-three/drei";
-import React, { useState } from "react";
+import React from "react";
 
-export const Workspace = ({ onClick = () => {}, mouseMove = () => {} }) => {
-  const [workspaceSize, setWorkspaceSize] = useState(500);
-
+export const Workspace = ({
+  onClick = () => {},
+  mouseMove = () => {},
+  workspaceSize,
+}) => {
   const gridSize = workspaceSize / 25;
 
   return (
     <>
-      <gridHelper args={[workspaceSize, gridSize]} />
+      <gridHelper position={[0, 0.5, 0]} args={[workspaceSize, gridSize]} />
       <mesh
         rotation={[-Math.PI / 2, 0, 0]}
         onClick={onClick}
-        // position={[0, -0.5, 0]}
         onPointerMove={(e) => {
           mouseMove(e);
-          // adjustWorkspaceSize(e);
         }}
       >
         <planeGeometry args={[workspaceSize, workspaceSize]} />

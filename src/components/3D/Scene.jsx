@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/no-unknown-property */
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useMemo } from "react";
 import {
   Brick,
   BrickCursor,
@@ -17,6 +17,7 @@ import {
   getMeasurementsFromDimensions,
   base,
   useAnchorShorcuts,
+  minWorkSpaceSize,
 } from "../../utils";
 import { button, useControls } from "leva";
 import { ChangeColor } from "./ChangeColor";
@@ -24,9 +25,13 @@ import { ChangeColor } from "./ChangeColor";
 export const Scene = () => {
   const [bricks, setBricks] = useState([]);
 
+  const [workspaceSize, setWorkspaceSize] = useState(minWorkSpaceSize);
+
   const bricksBoundBox = useRef([]);
 
   const brickCursorRef = useRef();
+
+  const box = useMemo(() => new Box3(), []);
 
   const [{ width, depth, rotate, color, anchorX, anchorZ, Edit }, set] =
     useControls(() => ({
@@ -164,6 +169,23 @@ export const Scene = () => {
           evenDepth ? base : base / 2
         )
       );
+
+    const bb = box.setFromObject(brickCursorRef.current);
+    const max = bb.max.multiplyScalar(1 / base);
+    const min = bb.min.multiplyScalar(1 / base);
+    const brickXEnd = brickCursorRef.current.position.x > 0 ? max.x : min.x;
+    const brickZEnd = brickCursorRef.current.position.z > 0 ? max.z : min.z;
+
+    setWorkspaceSize((currentSize) => {
+      const sizeDiff = Math.max(
+        Math.abs(brickXEnd + anchorX) * base * 2 - currentSize,
+        Math.abs(brickZEnd + anchorZ) * base * 2 - currentSize
+      );
+      if (sizeDiff > 0 || currentSize > minWorkSpaceSize) {
+        return currentSize + sizeDiff;
+      }
+      return currentSize;
+    });
   };
 
   const onClick = (e) => {
@@ -218,7 +240,11 @@ export const Scene = () => {
         <ChangeColor color={color} setBricks={setBricks} />
       </Select>
       <Lights />
-      <Workspace onClick={onClick} mouseMove={mouseMove} />
+      <Workspace
+        onClick={onClick}
+        mouseMove={mouseMove}
+        workspaceSize={workspaceSize}
+      />
       <BrickCursor
         visible={Edit ? false : true}
         ref={brickCursorRef}
