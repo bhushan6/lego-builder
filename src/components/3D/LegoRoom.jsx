@@ -1,3 +1,7 @@
+/* eslint-disable react/no-unknown-property */
+/* eslint-disable no-unused-vars */
+/* eslint-disable react/prop-types */
+/* eslint-disable react/display-name */
 import { Canvas } from "@react-three/fiber";
 import React, { Suspense } from "react";
 import { LinearToneMapping } from "three";

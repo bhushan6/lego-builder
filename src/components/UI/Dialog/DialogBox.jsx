@@ -1,3 +1,7 @@
+/* eslint-disable react/no-unknown-property */
+/* eslint-disable no-unused-vars */
+/* eslint-disable react/prop-types */
+/* eslint-disable react/display-name */
 import React from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { Cross2Icon, InfoCircledIcon } from "@radix-ui/react-icons";

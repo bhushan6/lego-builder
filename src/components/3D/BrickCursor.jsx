@@ -1,3 +1,7 @@
+/* eslint-disable react/no-unknown-property */
+/* eslint-disable no-unused-vars */
+/* eslint-disable react/prop-types */
+/* eslint-disable react/display-name */
 import React, { forwardRef, useMemo } from "react";
 import { Vector3 } from "three";
 import { getMeasurementsFromDimensions, base } from "../../utils";

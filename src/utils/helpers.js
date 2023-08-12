@@ -1,6 +1,6 @@
 import { base, knobSize } from "./constants";
 import { BoxGeometry, CylinderGeometry } from "three";
-import { mergeBufferGeometries } from "three/addons/utils/BufferGeometryUtils.js";
+import { mergeGeometries } from "three/addons/utils/BufferGeometryUtils.js";
 
 export function CSSToHex(cssColor) {
   return parseInt(`0x${cssColor.substring(1)}`, 16);
@@ -15,7 +15,7 @@ export function getMeasurementsFromDimensions({ x, y, z }) {
 }
 
 export function mergeMeshes(geometries) {
-  return mergeBufferGeometries(geometries);
+  return mergeGeometries(geometries);
 }
 
 export function createGeometry({
@@ -41,7 +41,7 @@ export function createGeometry({
     }
   }
 
-  const brickGeometry = mergeBufferGeometries(geometries);
+  const brickGeometry = mergeGeometries(geometries);
   return brickGeometry;
 }
 
