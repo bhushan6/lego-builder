@@ -25,6 +25,8 @@ import { ChangeColor } from "./ChangeColor";
 export const Scene = () => {
   const [bricks, setBricks] = useState([]);
 
+  const minWorkSpaceSizeRef = useRef(minWorkSpaceSize);
+
   const [workspaceSize, setWorkspaceSize] = useState(minWorkSpaceSize);
 
   const bricksBoundBox = useRef([]);
@@ -96,6 +98,26 @@ export const Scene = () => {
       const boundingBoxOfBrickToBeAdded = new Box3().setFromObject(
         brickCursorRef.current
       );
+
+      const maxMax = Math.max(
+        Math.abs(boundingBoxOfBrickToBeAdded.max.x * 2),
+        Math.abs(boundingBoxOfBrickToBeAdded.max.z * 2)
+      );
+      const maxMin = Math.max(
+        Math.abs(boundingBoxOfBrickToBeAdded.min.x * 2),
+        Math.abs(boundingBoxOfBrickToBeAdded.min.z * 2)
+      );
+
+      const max = Math.max(maxMax, maxMin);
+
+      minWorkSpaceSizeRef.current = Math.max(max, minWorkSpaceSizeRef.current);
+
+      setWorkspaceSize((currentSize) => {
+        if (currentSize <= max) {
+          return max;
+        }
+        return currentSize;
+      });
 
       let canCreate = true;
 
@@ -181,7 +203,7 @@ export const Scene = () => {
         Math.abs(brickXEnd + anchorX) * base * 2 - currentSize,
         Math.abs(brickZEnd + anchorZ) * base * 2 - currentSize
       );
-      if (sizeDiff > 0 || currentSize > minWorkSpaceSize) {
+      if (sizeDiff > 0 || currentSize > minWorkSpaceSizeRef.current) {
         return currentSize + sizeDiff;
       }
       return currentSize;
