@@ -10,6 +10,7 @@ import { DialogBox } from "../UI";
 import { Perf } from "r3f-perf";
 import { ModeToggleBar } from "../UI/ModeToggleBar";
 import { Panel } from "../UI/Panel";
+import { BottomBar } from "../UI/BottomBar";
 
 export const LegoRoom = () => {
   return (
@@ -17,6 +18,7 @@ export const LegoRoom = () => {
       <DialogBox />
       <ModeToggleBar />
       <Panel />
+      <BottomBar />
       <Canvas
         gl={{
           alpha: false,

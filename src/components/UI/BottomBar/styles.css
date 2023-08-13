@@ -1,0 +1,39 @@
+@import "@radix-ui/colors/violet.css";
+
+button {
+  all: unset;
+}
+
+.Button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  padding: 0 15px;
+  font-size: 15px;
+  line-height: 1;
+  font-weight: 500;
+  height: 35px;
+}
+
+.BottomBar {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10000;
+  background-color: white;
+  border-radius: 4px;
+  padding: 4px;
+}
+
+.Icon {
+  width: 30px;
+  height: 30px;
+  padding: 4px;
+  border-radius: 4px;
+}
+
+.BottomBar .Button:hover .Icon {
+  background-color: var(--violet-5);
+}
