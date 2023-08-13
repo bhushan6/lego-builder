@@ -21,7 +21,5 @@ export const DeleteBrick = ({ setBricks }) => {
 
   const bricks = useStore((state) => state.bricks);
 
-  console.log(bricks, ":::::::");
-
   return <></>;
 };

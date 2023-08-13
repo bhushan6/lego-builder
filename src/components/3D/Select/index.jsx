@@ -29,11 +29,6 @@ export function Select({
 
   const setSelectedBricks = useStore((state) => state.setSelectedBricks);
 
-  // React.useEffect(() => {
-  //   if (downed) onChange?.(active);
-  //   else onChangePointerUp?.(active);
-  // }, [active, downed]);
-
   const onClick = React.useCallback(
     (e) => {
       e.stopPropagation();
@@ -122,7 +117,6 @@ export function Select({
 
     function onSelectOver() {
       if (isDown) {
-        console.log(selBox);
         if (controls) controls.enabled = oldControlsEnabled;
 
         if (selectionOverTimeoutId.current) {
@@ -140,10 +134,9 @@ export function Select({
     }
 
     function pointerDown(event) {
-      //   console.log(event, "<<<<<<<<<<<<<<<<,");
       if (event.shiftKey) {
-        var vec = new THREE.Vector3(); // create once and reuse
-        var pos = new THREE.Vector3(); // create once and reuse
+        var vec = new THREE.Vector3();
+        var pos = new THREE.Vector3();
 
         vec.set(
           (event.offsetX / window.innerWidth) * 2 - 1,
@@ -181,7 +174,6 @@ export function Select({
     }
 
     function pointerUp(event) {
-      //   console.log(event, ">>>>>>>>>>>>>>>>>>>>");
       if (isDown) onSelectOver();
     }
 
