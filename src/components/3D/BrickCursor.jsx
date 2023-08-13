@@ -4,7 +4,8 @@
 /* eslint-disable react/display-name */
 import React, { forwardRef, useMemo } from "react";
 import { Vector3 } from "three";
-import { getMeasurementsFromDimensions, base } from "../../utils";
+import { getMeasurementsFromDimensions, base, CREATE_MODE } from "../../utils";
+import { useStore } from "../../store";
 
 export const BrickCursor = forwardRef(
   (
@@ -16,10 +17,13 @@ export const BrickCursor = forwardRef(
       dimensions = { x: 1, z: 1 },
       rotation = 0,
       translation = { x: 0, z: 0 },
-      visible = true,
     },
     ref
   ) => {
+    const mode = useStore((state) => state.mode);
+
+    const visible = mode === CREATE_MODE;
+
     const { height, width, depth } = getMeasurementsFromDimensions(dimensions);
 
     const position = useMemo(() => {

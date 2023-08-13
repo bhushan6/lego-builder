@@ -6,21 +6,8 @@ import * as THREE from "three";
 import { SelectionBox } from "three-stdlib";
 import { useThree } from "@react-three/fiber";
 import { shallow } from "zustand/shallow";
-import { useControls } from "leva";
-
-const useEventControl = () => {
-  const { setEvents } = useThree();
-
-  const [{ events }, set] = useControls(() => ({
-    events: true,
-  }));
-
-  React.useEffect(() => {
-    setEvents({ enabled: events });
-  }, [events, setEvents]);
-
-  return null;
-};
+import { useStore } from "../../../store";
+import { EDIT_MODE } from "../../../utils";
 
 const context = React.createContext([]);
 const dispatchContext = React.createContext(() => {});
@@ -34,13 +21,14 @@ export function Select({
   border = "1px solid #55aaff",
   backgroundColor = "rgba(75, 160, 255, 0.1)",
   filter: customFilter = (item) => item,
-  enable,
   ...props
 }) {
   const [downed, down] = React.useState(false);
   const { setEvents, camera, raycaster, gl, controls, size, get } = useThree();
 
-  useEventControl();
+  const mode = useStore((state) => state.mode);
+
+  const enable = mode === EDIT_MODE;
 
   const [active, dispatch] = React.useReducer((state, { object, shift }) => {
     if (object === undefined) return [];

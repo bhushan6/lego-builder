@@ -8,10 +8,15 @@ import { LinearToneMapping } from "three";
 import { ControlsWrapper, Scene } from ".";
 import { DialogBox } from "../UI";
 import { Perf } from "r3f-perf";
+import { ModeToggleBar } from "../UI/ModeToggleBar";
+import { Panel } from "../UI/Panel";
 
 export const LegoRoom = () => {
   return (
     <>
+      <DialogBox />
+      <ModeToggleBar />
+      <Panel />
       <Canvas
         gl={{
           alpha: false,
@@ -32,9 +37,8 @@ export const LegoRoom = () => {
           <Scene />
           <ControlsWrapper />
         </Suspense>
-        <Perf position="bottom-left" />
+        {/* <Perf position="bottom-left" matrixUpdate={true} /> */}
       </Canvas>
-      <DialogBox />
     </>
   );
 };

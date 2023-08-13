@@ -9,7 +9,7 @@ export function CSSToHex(cssColor) {
 export function getMeasurementsFromDimensions({ x, y, z }) {
   return {
     width: base * x,
-    height: base * y || (base * 2) / 1.5,
+    height: base * y || base,
     depth: base * z,
   };
 }
@@ -34,7 +34,7 @@ export function createGeometry({
     for (let j = 0; j < dimensions.z; j++) {
       const cylinder = new CylinderGeometry(knobDim, knobDim, knobDim, 20);
       const x = base * i - ((dimensions.x - 1) * base) / 2;
-      const y = base / 1.5;
+      const y = base - 12.5;
       const z = base * j - ((dimensions.z - 1) * base) / 2;
       cylinder.translate(x, y, z);
       geometries.push(cylinder);

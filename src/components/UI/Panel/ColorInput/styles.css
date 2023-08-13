@@ -1,0 +1,31 @@
+@import "@radix-ui/colors/black-alpha.css";
+
+.SliderInputContainer .react-colorful__saturation-pointer {
+  width: 10px;
+  height: 10px;
+}
+
+.SliderInputContainer .react-colorful__saturation {
+  border-bottom: none;
+  margin: 10px 0;
+  border-radius: 4px;
+}
+
+.SliderInputContainer .react-colorful__hue-pointer {
+  width: 10px;
+  height: 10px;
+}
+
+.SliderInputContainer .react-colorful__hue {
+  height: 8px;
+  /* padding: 8px; */
+  border-radius: 2px;
+}
+
+.SliderInputContainer .react-colorful {
+  width: 150px;
+  height: 150px;
+  border-radius: 4px;
+  padding: 8px;
+  background-color: var(--black-a7);
+}

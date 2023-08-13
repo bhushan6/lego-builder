@@ -1,0 +1,47 @@
+@import "@radix-ui/colors/black-alpha.css";
+@import "@radix-ui/colors/mauve.css";
+@import "@radix-ui/colors/violet.css";
+
+/* reset */
+button {
+  all: unset;
+}
+
+.ToggleGroup {
+  display: inline-flex;
+  background-color: white;
+  border-radius: 4px;
+  box-shadow: 0 2px 10px var(--black-a7);
+  position: fixed;
+  left: 50%;
+  top: 15px;
+  transform: translateX(-50%);
+  z-index: 1000;
+}
+
+.ToggleGroupItem {
+  background-color: white;
+  color: var(--mauve-11);
+  height: 35px;
+  display: flex;
+  font-size: 15px;
+  line-height: 1;
+  align-items: center;
+  justify-content: center;
+  margin: 6px;
+  padding: 0 4px;
+  border-radius: 4px;
+}
+
+.ToggleGroupItem:hover {
+  background-color: var(--violet-3);
+  cursor: pointer;
+}
+.ToggleGroupItem[data-state="on"] {
+  background-color: var(--violet-5);
+  color: var(--violet-11);
+}
+.ToggleGroupItem:focus {
+  position: relative;
+  box-shadow: 0 0 0 2px black;
+}

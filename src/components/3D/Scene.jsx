@@ -18,58 +18,29 @@ import {
   base,
   useAnchorShorcuts,
   minWorkSpaceSize,
+  EDIT_MODE,
 } from "../../utils";
-import { button, useControls } from "leva";
 import { ChangeColor } from "./ChangeColor";
+import { useStore } from "../../store";
 
 export const Scene = () => {
   const [bricks, setBricks] = useState([]);
-
-  const minWorkSpaceSizeRef = useRef(minWorkSpaceSize);
-
-  const [workspaceSize, setWorkspaceSize] = useState(minWorkSpaceSize);
 
   const bricksBoundBox = useRef([]);
 
   const brickCursorRef = useRef();
 
-  const box = useMemo(() => new Box3(), []);
+  const mode = useStore((state) => state.mode);
 
-  const [{ width, depth, rotate, color, anchorX, anchorZ, Edit }, set] =
-    useControls(() => ({
-      width: {
-        value: 1,
-        min: 1,
-        max: 5,
-        step: 1,
-      },
-      depth: {
-        value: 1,
-        min: 1,
-        max: 5,
-        step: 1,
-      },
-      rotate: false,
-      color: "#ff0",
-      anchorX: {
-        value: 0,
-        min: -2,
-        max: 2,
-        step: 1,
-      },
-      anchorZ: {
-        value: 0,
-        min: -2,
-        max: 2,
-        step: 1,
-      },
-      Undo: button((get) => {
-        undoAddedBrick();
-      }),
-      Edit: false,
-    }));
+  const isEditMode = mode === EDIT_MODE;
 
-  useAnchorShorcuts(anchorX, anchorZ, set);
+  const width = useStore((state) => state.width);
+  const depth = useStore((state) => state.depth);
+  const anchorX = useStore((state) => state.anchorX);
+  const anchorZ = useStore((state) => state.anchorZ);
+  const rotate = useStore((state) => state.rotate);
+  const color = useStore((state) => state.color);
+  // useAnchorShorcuts(anchorX, anchorZ, set);
 
   const setSelection = useSetSelection();
 
@@ -84,7 +55,7 @@ export const Scene = () => {
   const addBrick = (e) => {
     e.stopPropagation();
 
-    if (Edit) return;
+    if (isEditMode) return;
 
     if (!e.face?.normal || !e.point) return;
 
@@ -98,26 +69,6 @@ export const Scene = () => {
       const boundingBoxOfBrickToBeAdded = new Box3().setFromObject(
         brickCursorRef.current
       );
-
-      const maxMax = Math.max(
-        Math.abs(boundingBoxOfBrickToBeAdded.max.x * 2),
-        Math.abs(boundingBoxOfBrickToBeAdded.max.z * 2)
-      );
-      const maxMin = Math.max(
-        Math.abs(boundingBoxOfBrickToBeAdded.min.x * 2),
-        Math.abs(boundingBoxOfBrickToBeAdded.min.z * 2)
-      );
-
-      const max = Math.max(maxMax, maxMin);
-
-      minWorkSpaceSizeRef.current = Math.max(max, minWorkSpaceSizeRef.current);
-
-      setWorkspaceSize((currentSize) => {
-        if (currentSize <= max) {
-          return max;
-        }
-        return currentSize;
-      });
 
       let canCreate = true;
 
@@ -165,9 +116,8 @@ export const Scene = () => {
 
   const setBrickCursorPosition = (e) => {
     e.stopPropagation();
-    if (Edit) return;
+    if (isEditMode) return;
     if (!brickCursorRef.current) return;
-
     const { height } = getMeasurementsFromDimensions({
       x: width,
       z: depth,
@@ -191,27 +141,10 @@ export const Scene = () => {
           evenDepth ? base : base / 2
         )
       );
-
-    const bb = box.setFromObject(brickCursorRef.current);
-    const max = bb.max.multiplyScalar(1 / base);
-    const min = bb.min.multiplyScalar(1 / base);
-    const brickXEnd = brickCursorRef.current.position.x > 0 ? max.x : min.x;
-    const brickZEnd = brickCursorRef.current.position.z > 0 ? max.z : min.z;
-
-    setWorkspaceSize((currentSize) => {
-      const sizeDiff = Math.max(
-        Math.abs(brickXEnd + anchorX) * base * 2 - currentSize,
-        Math.abs(brickZEnd + anchorZ) * base * 2 - currentSize
-      );
-      if (sizeDiff > 0 || currentSize > minWorkSpaceSizeRef.current) {
-        return currentSize + sizeDiff;
-      }
-      return currentSize;
-    });
   };
 
   const onClick = (e) => {
-    if (!Edit) addBrick(e);
+    if (!isEditMode) addBrick(e);
   };
 
   const mouseMove = (e) => {
@@ -245,7 +178,7 @@ export const Scene = () => {
   return (
     <>
       <color attach="background" args={["#202025"]} />
-      <Select enable={Edit} box multiple onChange={console.log}>
+      <Select box multiple onChange={console.log}>
         {bricks.map((b, i) => {
           return (
             <Brick
@@ -265,10 +198,9 @@ export const Scene = () => {
       <Workspace
         onClick={onClick}
         mouseMove={mouseMove}
-        workspaceSize={workspaceSize}
+        workspaceSize={minWorkSpaceSize}
       />
       <BrickCursor
-        visible={Edit ? false : true}
         ref={brickCursorRef}
         rotation={rotate ? Math.PI / 2 : 0}
         dimensions={{ x: width, z: depth }}

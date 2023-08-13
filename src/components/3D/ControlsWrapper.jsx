@@ -8,18 +8,7 @@ import { useControls } from "leva";
 import { OrbitControls } from "@react-three/drei";
 
 export const ControlsWrapper = () => {
-  const { setEvents, camera } = useThree();
-
-  const [{ MultiSelect }, set] = useControls(() => ({
-    MultiSelect: false,
-  }));
-
-  useEffect(() => {
-    if (MultiSelect) {
-      camera.position.set(0, 1000, 0);
-      camera.lookAt(0, 0, 0);
-    }
-  }, [MultiSelect, camera]);
+  const { setEvents } = useThree();
 
   const startTimeoutID = useRef();
   const endTimeoutID = useRef();
@@ -37,12 +26,5 @@ export const ControlsWrapper = () => {
     endTimeoutID.current = setTimeout(() => setEvents({ enabled: true }), 500);
   };
 
-  return (
-    <OrbitControls
-      enabled={!MultiSelect}
-      makeDefault
-      onEnd={onEnd}
-      onStart={onStart}
-    />
-  );
+  return <OrbitControls makeDefault onEnd={onEnd} onStart={onStart} />;
 };
