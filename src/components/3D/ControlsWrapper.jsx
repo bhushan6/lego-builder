@@ -2,9 +2,8 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 /* eslint-disable react/display-name */
-import React, { useEffect, useRef } from "react";
+import React, { useRef } from "react";
 import { useThree } from "@react-three/fiber";
-import { useControls } from "leva";
 import { OrbitControls } from "@react-three/drei";
 
 export const ControlsWrapper = () => {

@@ -3,10 +3,12 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable react/display-name */
 import React, { useDeferredValue, useEffect, useRef } from "react";
-import { useSelect } from ".";
+import { useStore } from "../../store";
 
 export const ChangeColor = ({ color, setBricks }) => {
-  const selected = useSelect().map((sel) => sel.userData.uID);
+  const selected = useStore((state) => state.selectedBricks).map(
+    (sel) => sel.userData.uID
+  );
 
   const prevColor = useRef(color);
 

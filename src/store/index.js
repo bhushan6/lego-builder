@@ -22,4 +22,24 @@ export const useStore = create((set) => ({
 
   color: "#ff0000",
   setColor: (newColor) => set({ color: newColor }),
+
+  selectedBricks: [],
+  setSelectedBricks: ({ object, shift }) =>
+    set((state) => {
+      if (object === undefined) return { selectedBricks: [] };
+      else if (Array.isArray(object)) return { selectedBricks: object };
+      else if (!shift)
+        return state.selectedBricks[0] === object
+          ? { selectedBricks: [] }
+          : { selectedBricks: [object] };
+      else if (state.selectedBricks.includes(object))
+        return {
+          selectedBricks: state.selectedBricks.filter((o) => o !== object),
+        };
+      else return { selectedBricks: [object, ...state.selectedBricks] };
+    }),
+
+  bricks: [],
+  setBricks: (getBricks) =>
+    set((state) => ({ bricks: getBricks(state.bricks) })),
 }));

@@ -9,9 +9,6 @@ import { shallow } from "zustand/shallow";
 import { useStore } from "../../../store";
 import { EDIT_MODE } from "../../../utils";
 
-const context = React.createContext([]);
-const dispatchContext = React.createContext(() => {});
-
 export function Select({
   box,
   multiple,
@@ -30,38 +27,34 @@ export function Select({
 
   const enable = mode === EDIT_MODE;
 
-  const [active, dispatch] = React.useReducer((state, { object, shift }) => {
-    if (object === undefined) return [];
-    else if (Array.isArray(object)) return object;
-    else if (!shift) return state[0] === object ? [] : [object];
-    else if (state.includes(object)) return state.filter((o) => o !== object);
-    else return [object, ...state];
-  }, []);
+  const setSelectedBricks = useStore((state) => state.setSelectedBricks);
 
-  React.useEffect(() => {
-    if (downed) onChange?.(active);
-    else onChangePointerUp?.(active);
-  }, [active, downed]);
+  // React.useEffect(() => {
+  //   if (downed) onChange?.(active);
+  //   else onChangePointerUp?.(active);
+  // }, [active, downed]);
 
   const onClick = React.useCallback(
     (e) => {
       e.stopPropagation();
       if (!enable) return;
-      dispatch({
+      setSelectedBricks({
         object: customFilter([e.object])[0],
         shift: multiple && e.shiftKey,
       });
     },
-    [enable]
+    [enable, multiple]
   );
 
   React.useEffect(() => {
     if (!enable) {
-      dispatch({});
+      setSelectedBricks({});
     }
   }, [enable]);
 
-  const onPointerMissed = React.useCallback((e) => dispatch({}), []);
+  const onPointerMissed = React.useCallback((e) => {
+    setSelectedBricks({});
+  }, []);
 
   const ref = React.useRef(null);
 
@@ -166,7 +159,6 @@ export function Select({
 
         pos.copy(camera.position).add(vec.multiplyScalar(distance));
 
-        console.log(pos, "start");
         onSelectStart(event);
         prepareRay(event, selBox.startPoint);
       }
@@ -183,7 +175,7 @@ export function Select({
           .filter((o) => o.isMesh);
         if (!shallow(allSelected, previous)) {
           previous = allSelected;
-          dispatch({ object: customFilter(allSelected) });
+          setSelectedBricks({ object: customFilter(allSelected) });
         }
       }
     }
@@ -214,19 +206,7 @@ export function Select({
       onPointerMissed={onPointerMissed}
       {...props}
     >
-      <context.Provider value={active}>
-        <dispatchContext.Provider value={dispatch}>
-          {children}
-        </dispatchContext.Provider>
-      </context.Provider>
+      {children}
     </group>
   );
-}
-
-export function useSelect() {
-  return React.useContext(context);
-}
-
-export function useSetSelection() {
-  return React.useContext(dispatchContext);
 }

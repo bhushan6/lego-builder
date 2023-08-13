@@ -9,7 +9,6 @@ import {
   BrickOutline,
   DeleteBrick,
   Select,
-  useSetSelection,
 } from ".";
 import { Vector3, Box3 } from "three";
 import {
@@ -25,7 +24,9 @@ import { useStore } from "../../store";
 import { BorderPlane } from "./BorderPlane";
 
 export const Scene = () => {
-  const [bricks, setBricks] = useState([]);
+  // const [bricks, setBricks] = useState([]);
+  const bricks = useStore((state) => state.bricks);
+  const setBricks = useStore((state) => state.setBricks);
 
   const bricksBoundBox = useRef([]);
 
@@ -43,15 +44,15 @@ export const Scene = () => {
   const color = useStore((state) => state.color);
   // useAnchorShorcuts(anchorX, anchorZ, set);
 
-  const setSelection = useSetSelection();
+  // const setSelection = useStore(state => state.setSelectedBricks)
 
-  function undoAddedBrick() {
-    setSelection({}); // this should unselect the bricks but Doesn't work for now because of undo is button within leva
-    setBricks((prevBricks) => {
-      prevBricks.pop();
-      return [...prevBricks];
-    });
-  }
+  // function undoAddedBrick() {
+  //   setSelection({}); // this should unselect the bricks but Doesn't work for now because of undo is button within leva
+  //   setBricks((prevBricks) => {
+  //     prevBricks.pop();
+  //     return [...prevBricks];
+  //   });
+  // }
 
   const addBrick = (e) => {
     e.stopPropagation();
@@ -179,7 +180,7 @@ export const Scene = () => {
   return (
     <>
       <color attach="background" args={["#202025"]} />
-      <Select box multiple onChange={console.log}>
+      <Select box multiple>
         {bricks.map((b, i) => {
           return (
             <Brick

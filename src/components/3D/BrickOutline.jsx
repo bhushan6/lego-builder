@@ -2,7 +2,7 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 /* eslint-disable react/display-name */
-import { useSelect } from ".";
+// import { useSelect } from ".";
 import React, { useLayoutEffect, useMemo, useRef } from "react";
 import {
   createGeometry,
@@ -11,6 +11,7 @@ import {
   outlineWidth,
 } from "../../utils";
 import { BackSide, Object3D } from "three";
+import { useStore } from "../../store";
 
 const dummy = new Object3D();
 
@@ -81,7 +82,9 @@ const OutlineMesh = ({ meshesData }) => {
 };
 
 export const BrickOutline = () => {
-  const selected = useSelect().map((sel) => sel.userData);
+  const selected = useStore((state) => state.selectedBricks).map(
+    (sel) => sel.userData
+  );
 
   const selectedMeshes = useMemo(() => {
     const meshesAccrodingToType = {};
