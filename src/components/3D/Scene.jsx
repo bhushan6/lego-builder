@@ -22,6 +22,7 @@ import {
 } from "../../utils";
 import { ChangeColor } from "./ChangeColor";
 import { useStore } from "../../store";
+import { BorderPlane } from "./BorderPlane";
 
 export const Scene = () => {
   const [bricks, setBricks] = useState([]);
@@ -206,6 +207,11 @@ export const Scene = () => {
         dimensions={{ x: width, z: depth }}
         translation={{ x: anchorX, z: anchorZ }}
       />
+      {/* <BorderPlane
+        planeSize={[25, 100]}
+        color="#ff0000"
+        position={[25 / 2, 0.1, 0]}
+      /> */}
     </>
   );
 };
