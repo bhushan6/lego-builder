@@ -36,6 +36,8 @@ export const BottomBar = () => {
     setSelection({});
   };
 
+  const clearBricks = useStore((state) => state.clearBricks);
+
   return (
     <div className="BottomBar">
       <button className="Button violet">
@@ -49,6 +51,9 @@ export const BottomBar = () => {
         />
       </button>
       <button onClick={deleteSelectedBricks} className="Button violet">
+        <TrashIcon className="Icon" color="black" />
+      </button>
+      <button onClick={clearBricks} className="Button violet">
         <TrashIcon className="Icon" color="black" />
       </button>
     </div>

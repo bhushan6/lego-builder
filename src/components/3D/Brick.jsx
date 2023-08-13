@@ -94,6 +94,9 @@ export const Brick = ({
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ type: "spring", stiffness: 250, duration: 2 }}
+        userData={{
+          uID,
+        }}
       >
         <mesh
           castShadow

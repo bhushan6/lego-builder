@@ -21,10 +21,10 @@ import {
 } from "../../utils";
 import { ChangeColor } from "./ChangeColor";
 import { useStore } from "../../store";
-import { BorderPlane } from "./BorderPlane";
+// import { BorderPlane } from "./BorderPlane";
+import { Others } from "./Others";
 
 export const Scene = () => {
-  // const [bricks, setBricks] = useState([]);
   const bricks = useStore((state) => state.bricks);
   const setBricks = useStore((state) => state.setBricks);
 
@@ -42,6 +42,10 @@ export const Scene = () => {
   const anchorZ = useStore((state) => state.anchorZ);
   const rotate = useStore((state) => state.rotate);
   const color = useStore((state) => state.color);
+
+  const room = useStore((state) => state.liveblocks.room);
+  const self = useStore((state) => state.self);
+
   // useAnchorShorcuts(anchorX, anchorZ, set);
 
   // const setSelection = useStore(state => state.setSelectedBricks)
@@ -143,6 +147,17 @@ export const Scene = () => {
           evenDepth ? base : base / 2
         )
       );
+
+    room.broadcastEvent({
+      type: self.id,
+      data: {
+        x: brickCursorRef.current.position.x,
+        y: brickCursorRef.current.position.y,
+        z: brickCursorRef.current.position.z,
+        w: width,
+        d: depth,
+      },
+    });
   };
 
   const onClick = (e) => {
@@ -208,11 +223,7 @@ export const Scene = () => {
         dimensions={{ x: width, z: depth }}
         translation={{ x: anchorX, z: anchorZ }}
       />
-      {/* <BorderPlane
-        planeSize={[25, 100]}
-        color="#ff0000"
-        position={[25 / 2, 0.1, 0]}
-      /> */}
+      <Others />
     </>
   );
 };

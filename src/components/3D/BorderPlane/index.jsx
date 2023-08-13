@@ -1,7 +1,13 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 /* eslint-disable react/no-unknown-property */
-import { useLayoutEffect, useMemo, useRef } from "react";
+import {
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  forwardRef,
+  useImperativeHandle,
+} from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import { DoubleSide, RawShaderMaterial, Color, Vector2 } from "three";
 
@@ -45,14 +51,13 @@ void main() {
 }
 `;
 
-export const BorderPlane = ({
-  planeSize = [10, 10],
-  color = "#ffffff",
-  ...props
-}) => {
+export const BorderPlane = forwardRef(function BorderPlane(
+  { planeSize = [10, 10], color = "#ffffff", ...props },
+  ref
+) {
   const { size } = useThree();
 
-  const ref = useRef();
+  const mesh = useRef();
 
   const uniforms = useMemo(() => {
     return {
@@ -60,22 +65,22 @@ export const BorderPlane = ({
       uBorderColor: { value: new Color(0xffffff) },
       uBorderWidth: { value: 10 },
       uResolution: { value: new Vector2() },
-      uSize: { value: new Vector2(20, 20) },
+      uSize: { value: new Vector2(25, 25) },
     };
   }, []);
 
   useLayoutEffect(() => {
-    ref.current.material.uniforms.uResolution.value.x = size.width;
-    ref.current.material.uniforms.uResolution.value.y = size.height;
+    mesh.current.material.uniforms.uResolution.value.x = size.width;
+    mesh.current.material.uniforms.uResolution.value.y = size.height;
   }, [size]);
 
   useLayoutEffect(() => {
-    ref.current.material.uniforms.uSize.value.x = planeSize[0];
-    ref.current.material.uniforms.uSize.value.y = planeSize[1];
+    mesh.current.material.uniforms.uSize.value.x = planeSize[0];
+    mesh.current.material.uniforms.uSize.value.y = planeSize[1];
   }, [planeSize]);
 
   useLayoutEffect(() => {
-    // ref.current.material.uniforms.uBorderColor.value = color;
+    mesh.current.material.uniforms.uBorderColor.value.set(color);
   }, [color]);
 
   const planeMaterial = useMemo(() => {
@@ -94,14 +99,16 @@ export const BorderPlane = ({
   //     planeMaterial.uniforms.uTime.value = elapsedTime;
   //   });
 
+  useImperativeHandle(ref, () => mesh.current);
+
   return (
     <mesh
       rotation={[-Math.PI / 2, 0, 0]}
-      ref={ref}
+      ref={mesh}
       material={planeMaterial}
       {...props}
     >
       <planeGeometry args={planeSize} />
     </mesh>
   );
-};
+});
