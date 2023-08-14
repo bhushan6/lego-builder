@@ -29,13 +29,13 @@ export const DialogBox = () => (
         <Dialog.Title className="DialogTitle">Manual</Dialog.Title>
         <Dialog.Description className="DialogDescription" asChild>
           <ul>
-            <li>Use control panel to change the properties of brick</li>
+            <li>Use left side panel to change the properties of brick</li>
             <li>
               You change the pivot point of bricks using{" "}
               <span className="key">A</span> <span className="key">S</span>{" "}
               <span className="key">W</span> and <span className="key">D</span>{" "}
               keys or You can use <strong>anchorX</strong> and{" "}
-              <strong>anchorY</strong> option from the control panel
+              <strong>anchorZ</strong> option from the control panel
             </li>
             <li>
               To delete brick, select <strong>Edit</strong> option in control
@@ -43,6 +43,22 @@ export const DialogBox = () => (
               <span className="key">Shift</span> to select multiple bricks and
               use
               <span className="key">Delete</span> to delete selected bricks
+            </li>
+            <li>
+              Top bar has two options. create Mode which let&apos;s you create
+              new bricks while Edit mode let&apos;s you edit existing bricks by
+              selecting
+            </li>
+            <li>
+              You can also use <span className="key">CTRL</span> +{" "}
+              <span className="key">Z</span> for undo,{" "}
+              <span className="key">CTRL</span> + <span className="key">R</span>{" "}
+              for redo.
+            </li>
+            <li>
+              Bottom bar has (from left) first button to undo, second to redo,
+              third to delete selected and forth button displays list of all
+              users in room
             </li>
           </ul>
         </Dialog.Description>
