@@ -47,7 +47,7 @@ export const Scene = () => {
   const room = useStore((state) => state.liveblocks.room);
   const self = useStore((state) => state.self);
 
-  // useAnchorShorcuts(anchorX, anchorZ, set);
+  useAnchorShorcuts();
 
   const addBrick = (e) => {
     e.stopPropagation();

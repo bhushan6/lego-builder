@@ -1,20 +1,24 @@
 import useKeyboardShortcut from "use-keyboard-shortcut";
+import { useStore } from "../store";
 
-export const useAnchorShorcuts = (anchorX, anchorZ, set) => {
+export const useAnchorShorcuts = () => {
+  const setAnchorX = useStore((state) => state.setAnchorX);
+  const setAnchorZ = useStore((state) => state.setAnchorZ);
+
   const anchorXPlus = () => {
-    set({ anchorX: anchorX + 1 });
+    setAnchorX(useStore.getState().anchorX + 1);
   };
 
   const anchorXMinus = () => {
-    set({ anchorX: anchorX - 1 });
+    setAnchorX(useStore.getState().anchorX - 1);
   };
 
   const anchorZPlus = () => {
-    set({ anchorZ: anchorZ - 1 });
+    setAnchorZ(useStore.getState().anchorZ + 1);
   };
 
   const anchorZMinus = () => {
-    set({ anchorZ: anchorZ + 1 });
+    setAnchorZ(useStore.getState().anchorZ - 1);
   };
 
   useKeyboardShortcut(["D"], anchorXPlus, {
