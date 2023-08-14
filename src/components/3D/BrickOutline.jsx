@@ -34,15 +34,15 @@ const OutlineMesh = ({ meshesData }) => {
     });
   }, [width, height, depth, dimensions]);
 
-  const compansate = {
-    x: dimensions.x % 2 === 0 ? dimensions.x / 2 : (dimensions.x - 1) / 2,
-    z: dimensions.z % 2 === 0 ? dimensions.z / 2 : (dimensions.z - 1) / 2,
-  };
-
   useLayoutEffect(() => {
     if (!ref.current) return;
 
     meshesData.forEach((meshData, i) => {
+      const compansate = {
+        x: dimensions.x % 2 === 0 ? dimensions.x / 2 : (dimensions.x - 1) / 2,
+        z: dimensions.z % 2 === 0 ? dimensions.z / 2 : (dimensions.z - 1) / 2,
+      };
+
       const translation = meshData.translation;
 
       const offset = {
@@ -58,9 +58,9 @@ const OutlineMesh = ({ meshesData }) => {
 
       dummy.rotation.set(0, meshData.rotation, 0);
       dummy.position.set(
-        meshData.position.x + offset.x,
+        meshData.position.x + (offset.x * width) / dimensions.x,
         Math.abs(meshData.position.y),
-        meshData.position.z + offset.z
+        meshData.position.z + (offset.z * width) / dimensions.z
       );
       dummy.updateMatrix();
       ref.current.setMatrixAt(i, dummy.matrix);
@@ -74,6 +74,7 @@ const OutlineMesh = ({ meshesData }) => {
         ref={ref}
         position={[0, 0.5, 0]}
         args={[outlineGeometry, null, meshesData.length]}
+        raycast={() => {}}
       >
         <meshBasicMaterial color={"white"} side={BackSide} />
       </instancedMesh>

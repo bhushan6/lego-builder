@@ -36,7 +36,7 @@ export const SliderWithLabel = ({
         max={4}
         step={1}
         min={1}
-        onValueChange={(newVal) => setValue(newVal)}
+        onValueChange={([newVal]) => setValue(newVal)}
         {...props}
       >
         <Slider.Track className="SliderTrack">
