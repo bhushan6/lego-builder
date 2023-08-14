@@ -4,6 +4,7 @@ import { TrashIcon, ResetIcon } from "@radix-ui/react-icons";
 import "./styles.css";
 import { useStore } from "../../../store";
 import { PopoverPeopleList } from "../PeopleList";
+import { useUndoRedoShortcut } from "../../../utils";
 // import { EDIT_MODE } from "../../../utils";
 
 export const BottomBar = () => {
@@ -50,6 +51,8 @@ export const BottomBar = () => {
     room.history.redo();
     setSelection({});
   };
+
+  useUndoRedoShortcut(undo, redo);
 
   return (
     <div className="BottomBar">

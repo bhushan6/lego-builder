@@ -78,3 +78,19 @@ export const useDeleteShortcut = (selected, setBricks, onDelete) => {
 
   return null;
 };
+
+export const useUndoRedoShortcut = (undo, redo) => {
+  useKeyboardShortcut(["Control", "Z"], undo, {
+    overrideSystem: true,
+    ignoreInputFields: false,
+    repeatOnHold: false,
+  });
+
+  useKeyboardShortcut(["Control", "R"], redo, {
+    overrideSystem: true,
+    ignoreInputFields: false,
+    repeatOnHold: false,
+  });
+
+  return null;
+};
