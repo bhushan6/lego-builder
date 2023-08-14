@@ -7,6 +7,10 @@ html {
   font-family: sans-serif;
 }
 
+* {
+  user-select: none;
+}
+
 canvas {
   width: 100vw;
   height: 100vh;
