@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 import "./style.css";
 import * as Popover from "@radix-ui/react-popover";
@@ -20,31 +21,14 @@ const s = {
   alignItems: "center",
 };
 
-const PeopleList = () => {
-  const others = useStore((state) => state.liveblocks.others);
-
-  const NoOfPeoples = others.length;
-
+const PeopleList = ({ NoOfPeoples, children }) => {
   return (
     <ScrollArea.Root className="PeopleList ScrollAreaRoot">
       <ScrollArea.Viewport
         className="ScrollAreaViewport"
         style={NoOfPeoples < 1 ? s : {}}
       >
-        {NoOfPeoples < 1 && (
-          <h3 style={{ textAlign: "center", padding: "6px", fontSize: "14px" }}>
-            No one else in room
-          </h3>
-        )}
-        {others.map((user) => {
-          return user.presence?.self ? (
-            <Person
-              key={user.presence.self.id}
-              color={user.presence.self.color}
-              name={user.presence.self.name}
-            />
-          ) : null;
-        })}
+        {children}
       </ScrollArea.Viewport>
       <ScrollArea.Scrollbar
         className="ScrollAreaScrollbar"
@@ -63,21 +47,51 @@ const PeopleList = () => {
   );
 };
 
-export const PopoverPeopleList = () => (
-  <Popover.Root>
-    <Popover.Trigger asChild>
-      <button className="Button violet" aria-label="Connected People List">
-        <PersonIcon className="Icon" color="black" />
-      </button>
-    </Popover.Trigger>
-    <Popover.Portal>
-      <Popover.Content className="PopoverContent" sideOffset={5}>
-        <PeopleList />
-        {/* <Popover.Close className="PopoverClose" aria-label="Close">
-          <Cross2Icon />
-        </Popover.Close> */}
-        {/* <Popover.Arrow className="PopoverArrow" /> */}
-      </Popover.Content>
-    </Popover.Portal>
-  </Popover.Root>
-);
+export const PopoverPeopleList = () => {
+  const others = useStore((state) => state.liveblocks.others);
+
+  const NoOfPeoples = others.length;
+
+  return (
+    <Popover.Root>
+      <Popover.Trigger asChild>
+        <button
+          style={{ position: "relative" }}
+          className="Button violet"
+          aria-label="Connected People List"
+        >
+          <PersonIcon className="Icon" color="black" />
+          <div className="NoOfOthers">
+            <p>{NoOfPeoples}</p>
+          </div>
+        </button>
+      </Popover.Trigger>
+      <Popover.Portal>
+        <Popover.Content className="PopoverContent" sideOffset={5}>
+          <PeopleList NoOfPeoples={NoOfPeoples}>
+            {NoOfPeoples < 1 && (
+              <h3
+                style={{
+                  textAlign: "center",
+                  padding: "6px",
+                  fontSize: "14px",
+                }}
+              >
+                No one else in room
+              </h3>
+            )}
+            {others.map((user) => {
+              return user.presence?.self ? (
+                <Person
+                  key={user.presence.self.id}
+                  color={user.presence.self.color}
+                  name={user.presence.self.name}
+                />
+              ) : null;
+            })}
+          </PeopleList>
+        </Popover.Content>
+      </Popover.Portal>
+    </Popover.Root>
+  );
+};

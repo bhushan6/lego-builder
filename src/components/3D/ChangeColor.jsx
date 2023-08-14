@@ -5,10 +5,12 @@
 import React, { useDeferredValue, useEffect, useRef } from "react";
 import { useStore } from "../../store";
 
-export const ChangeColor = ({ color, setBricks }) => {
+export const ChangeColor = ({ color }) => {
   const selected = useStore((state) => state.selectedBricks).map(
     (sel) => sel.userData.uID
   );
+
+  const setBricks = useStore((state) => state.setBricks);
 
   const prevColor = useRef(color);
 
@@ -17,8 +19,10 @@ export const ChangeColor = ({ color, setBricks }) => {
   useEffect(() => {
     if (selected.length < 1 || prevColor.current === deferredColor) return;
 
-    setBricks((bricks) =>
-      bricks.map((brick) => {
+    setBricks((bricks) => {
+      const updatedBricks = [];
+
+      bricks.forEach((brick) => {
         const selectedClone = [...selected];
         const uID = brick.uID;
         for (let i = 0; i < selectedClone.length; i++) {
@@ -28,14 +32,16 @@ export const ChangeColor = ({ color, setBricks }) => {
             selectedClone.splice(i, 1);
           }
         }
-        return brick;
-      })
-    );
+        updatedBricks.push(brick);
+      });
+
+      return updatedBricks;
+    });
 
     return () => {
       prevColor.current = deferredColor;
     };
-  }, [deferredColor, selected]);
+  }, [deferredColor, selected, setBricks]);
 
-  return <></>;
+  return null;
 };
