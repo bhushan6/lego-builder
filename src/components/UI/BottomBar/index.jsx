@@ -3,6 +3,7 @@ import React from "react";
 import { TrashIcon, ResetIcon } from "@radix-ui/react-icons";
 import "./styles.css";
 import { useStore } from "../../../store";
+import { PopoverPeopleList } from "../PeopleList";
 // import { EDIT_MODE } from "../../../utils";
 
 export const BottomBar = () => {
@@ -15,6 +16,8 @@ export const BottomBar = () => {
   );
   const setBricks = useStore((state) => state.setBricks);
   const setSelection = useStore((state) => state.setSelectedBricks);
+
+  const room = useStore((state) => state.liveblocks.room);
 
   const deleteSelectedBricks = () => {
     setBricks((bricks) => {
@@ -38,12 +41,22 @@ export const BottomBar = () => {
 
   const clearBricks = useStore((state) => state.clearBricks);
 
+  const undo = () => {
+    room.history.undo();
+    setSelection({});
+  };
+
+  const redo = () => {
+    room.history.redo();
+    setSelection({});
+  };
+
   return (
     <div className="BottomBar">
-      <button className="Button violet">
+      <button className="Button violet" onClick={undo}>
         <ResetIcon className="Icon" color="black" />
       </button>
-      <button className="Button violet">
+      <button className="Button violet" onClick={redo}>
         <ResetIcon
           style={{ transform: "scaleX(-1)" }}
           className="Icon"
@@ -56,6 +69,7 @@ export const BottomBar = () => {
       <button onClick={clearBricks} className="Button violet">
         <TrashIcon className="Icon" color="black" />
       </button>
+      <PopoverPeopleList />
     </div>
   );
 };

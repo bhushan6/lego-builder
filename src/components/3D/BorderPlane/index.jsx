@@ -10,6 +10,15 @@ import {
 } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import { DoubleSide, RawShaderMaterial, Color, Vector2 } from "three";
+import { Html } from "@react-three/drei";
+import { cursorColors } from "../../../utils";
+
+function shuffleArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]]; // Swap elements
+  }
+}
 
 const vertexShader = `
 varying vec2 vUv;
@@ -70,6 +79,7 @@ export const BorderPlane = forwardRef(function BorderPlane(
   const { size } = useThree();
 
   const mesh = useRef();
+  const group = useRef();
 
   const uniforms = useMemo(() => {
     return {
@@ -91,7 +101,7 @@ export const BorderPlane = forwardRef(function BorderPlane(
     mesh.current.material.uniforms.uSize.value.x = planeSize[0];
     mesh.current.material.uniforms.uSize.value.y = planeSize[1];
     mesh.current.material.uniforms.uBorderWidth.value =
-      (Math.min(planeSize[0], planeSize[1]) / 50) * 5;
+      (Math.min(planeSize[0], planeSize[1]) / 50) * 10;
   }, [planeSize]);
 
   useLayoutEffect(() => {
@@ -114,16 +124,24 @@ export const BorderPlane = forwardRef(function BorderPlane(
   //     planeMaterial.uniforms.uTime.value = elapsedTime;
   //   });
 
-  useImperativeHandle(ref, () => mesh.current);
+  useImperativeHandle(ref, () => ({
+    plane: mesh.current,
+    container: group.current,
+  }));
 
   return (
-    <mesh
-      rotation={[-Math.PI / 2, 0, 0]}
-      ref={mesh}
-      material={planeMaterial}
-      {...props}
-    >
-      <planeGeometry args={planeSize} />
-    </mesh>
+    <group ref={group}>
+      <mesh
+        rotation={[-Math.PI / 2, 0, 0]}
+        ref={mesh}
+        material={planeMaterial}
+        {...props}
+      >
+        <planeGeometry args={planeSize} />
+      </mesh>
+      {/* <Html>
+        <h1>Hello</h1>
+      </Html> */}
+    </group>
   );
 });

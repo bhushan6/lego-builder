@@ -1,5 +1,11 @@
 import { create } from "zustand";
-import { CREATE_MODE, defaultAnchor, defaultWidth, uID } from "../utils";
+import {
+  CREATE_MODE,
+  defaultAnchor,
+  defaultWidth,
+  generateSoftColors,
+  uID,
+} from "../utils";
 import { createClient } from "@liveblocks/client";
 import { liveblocks } from "@liveblocks/zustand";
 
@@ -61,6 +67,7 @@ const client = createClient({
 // }));
 
 const id = uID();
+const color = generateSoftColors();
 
 export const useStore = create(
   liveblocks(
@@ -107,12 +114,24 @@ export const useStore = create(
         set((state) => ({ bricks: getBricks(state.bricks) })),
       clearBricks: () => set({ bricks: [] }),
 
-      self: { id: id },
+      self: { id: id, color: color },
+
+      cursorColors: {},
+      setCursorColors: (newCursorColor) =>
+        set((state) => ({
+          cursorColors: { ...state.cursorColors, ...newCursorColor },
+        })),
+
+      removeCursorColor: (id) =>
+        set((state) => {
+          delete state.cursorColors[id];
+          return { cursorColors: { ...state.cursorColors } };
+        }),
     }),
     {
       client,
       presenceMapping: { self: true },
-      storageMapping: { bricks: true },
+      storageMapping: { bricks: true, cursorColors: true },
     }
   )
 );

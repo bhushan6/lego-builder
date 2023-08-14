@@ -1,5 +1,5 @@
 import "./App.css";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { LegoRoom } from "./components/3D";
 import { useStore } from "./store";
 import { Loader } from "./components/UI/Loader";

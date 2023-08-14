@@ -30,3 +30,26 @@ export const colors = [
   "#000000",
   "#652A0C",
 ];
+
+export const cursorColors = [
+  "#FFA6B1", // Soft Pink
+  "#FFB6C1", // Light Pink
+  "#FFD1A8", // Peach
+  "#FFE4B5", // Moccasin
+  "#FFDEAD", // Navajo White
+  "#FFF0E1", // Misty Rose
+  "#D8BFD8", // Thistle
+  "#E6E6FA", // Lavender
+  "#B0E0E6", // Powder Blue
+  "#ADD8E6", // Light Blue
+  "#B0C4DE", // Light Steel Blue
+  "#98FB98", // Pale Green
+  "#F0E68C", // Khaki
+  "#FFEBD6", // Almond
+  "#FFE5B4", // Mellow Apricot
+  "#FFDAB9", // Peach Puff
+  "#EEDD82", // Light Goldenrod
+  "#D3D3D3", // Light Gray
+  "#FFC0CB", // Pink
+  "#FFB347", // Pastel Orange
+];
