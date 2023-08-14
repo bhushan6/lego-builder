@@ -39,7 +39,7 @@ export const BottomBar = () => {
     setSelection({});
   };
 
-  const clearBricks = useStore((state) => state.clearBricks);
+  // const clearBricks = useStore((state) => state.clearBricks);
 
   const undo = () => {
     room.history.undo();
@@ -66,9 +66,9 @@ export const BottomBar = () => {
       <button onClick={deleteSelectedBricks} className="Button violet">
         <TrashIcon className="Icon" color="black" />
       </button>
-      <button onClick={clearBricks} className="Button violet">
+      {/* <button onClick={clearBricks} className="Button violet">
         <TrashIcon className="Icon" color="black" />
-      </button>
+      </button> */}
       <PopoverPeopleList />
     </div>
   );

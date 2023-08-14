@@ -75,6 +75,7 @@ export const PopoverPeopleList = () => {
                   textAlign: "center",
                   padding: "6px",
                   fontSize: "14px",
+                  color: "rgba(0, 0, 0, 0.5)",
                 }}
               >
                 No one else in room
