@@ -21,9 +21,13 @@ import {
 } from "../../utils";
 import { ChangeColor } from "./ChangeColor";
 import { useStore } from "../../store";
-// import { BorderPlane } from "./BorderPlane";
+
 import { Others } from "./Others";
-import { BorderPlane } from "./BorderPlane";
+
+const mousePoint = new Vector3();
+const normal = new Vector3();
+const brickDimensions = new Vector3();
+const offsetVec = new Vector3();
 
 export const Scene = () => {
   const bricks = useStore((state) => state.bricks);
@@ -123,21 +127,22 @@ export const Scene = () => {
     const evenWidth = !rotate ? width % 2 === 0 : depth % 2 === 0;
     const evenDepth = !rotate ? depth % 2 === 0 : width % 2 === 0;
 
+    mousePoint.set(e.point.x, Math.abs(e.point.y), e.point.z);
+    normal.set(e.face.normal.x, Math.abs(e.face.normal.y), e.face.normal.z);
+    brickDimensions.set(base, height, base);
+    offsetVec.set(
+      evenWidth ? base : base / 2,
+      height / 2,
+      evenDepth ? base : base / 2
+    );
+
     brickCursorRef.current.position
-      .copy(new Vector3(e.point.x, Math.abs(e.point.y), e.point.z))
-      .add(
-        new Vector3(e.face.normal.x, Math.abs(e.face.normal.y), e.face.normal.z)
-      )
-      .divide(new Vector3(base, height, base))
+      .copy(mousePoint)
+      .add(normal)
+      .divide(brickDimensions)
       .floor()
-      .multiply(new Vector3(base, height, base))
-      .add(
-        new Vector3(
-          evenWidth ? base : base / 2,
-          height / 2,
-          evenDepth ? base : base / 2
-        )
-      );
+      .multiply(brickDimensions)
+      .add(offsetVec);
 
     room.broadcastEvent({
       type: self.id,
