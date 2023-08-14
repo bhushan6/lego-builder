@@ -14,7 +14,7 @@ button {
   box-shadow: 0 2px 10px var(--black-a7);
   position: fixed;
   left: 50%;
-  top: 15px;
+  top: 20px;
   transform: translateX(-50%);
   z-index: 1000;
 }

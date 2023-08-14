@@ -11,10 +11,16 @@ export const DialogBox = () => (
   <Dialog.Root defaultOpen={true}>
     <Dialog.Trigger asChild>
       <button
-        style={{ position: "absolute", top: 0, left: 0, margin: "20px" }}
+        style={{
+          position: "absolute",
+          top: "20px",
+          left: "20px",
+          background: "white",
+          zIndex: "1000000000",
+        }}
         className="Button violet"
       >
-        <InfoCircledIcon transform="scale(2)" />
+        <InfoCircledIcon color="black" transform="scale(2)" />
       </button>
     </Dialog.Trigger>
     <Dialog.Portal>
