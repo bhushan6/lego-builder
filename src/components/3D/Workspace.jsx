@@ -13,7 +13,7 @@ export const Workspace = ({
 
   return (
     <>
-      <gridHelper position={[0, 0.5, 0]} args={[workspaceSize, gridSize]} />
+      <gridHelper position={[0, -0.05, 0]} args={[workspaceSize, gridSize]} />
       <mesh
         rotation={[-Math.PI / 2, 0, 0]}
         onClick={onClick}
