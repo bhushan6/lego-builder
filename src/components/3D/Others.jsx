@@ -12,7 +12,7 @@ const Other = memo(function Other({ id, otherCurors }) {
   const ref = useRef();
 
   useEffect(() => {
-    room.subscribe("event", ({ event }) => {
+    const unsubscribe = room.subscribe("event", ({ event }) => {
       if (event.type === id) {
         const d = event.data;
         ref.current.position.x = d.x;
@@ -20,8 +20,16 @@ const Other = memo(function Other({ id, otherCurors }) {
         ref.current.position.y = d.y - 31 / 2;
 
         ref.current.scale.set(d.w, d.d);
+        ref.current.material.uniforms.uSize.value.x = d.w;
+        ref.current.material.uniforms.uSize.value.y = d.d;
+        ref.current.material.uniforms.uBorderWidth.value =
+          (Math.min(d.w, d.d) / 50) * 5;
       }
     });
+
+    return () => {
+      unsubscribe();
+    };
   }, [id, room]);
 
   return (

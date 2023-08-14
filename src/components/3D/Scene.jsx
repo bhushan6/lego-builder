@@ -23,6 +23,7 @@ import { ChangeColor } from "./ChangeColor";
 import { useStore } from "../../store";
 // import { BorderPlane } from "./BorderPlane";
 import { Others } from "./Others";
+import { BorderPlane } from "./BorderPlane";
 
 export const Scene = () => {
   const bricks = useStore((state) => state.bricks);
