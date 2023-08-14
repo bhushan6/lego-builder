@@ -127,3 +127,7 @@ export function generateSoftColors() {
 
   return hexColor;
 }
+
+export function isBlank(str) {
+  return !str || /^\s*$/.test(str);
+}

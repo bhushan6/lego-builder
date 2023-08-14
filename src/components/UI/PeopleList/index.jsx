@@ -40,8 +40,8 @@ const PeopleList = () => {
           return user.presence?.self ? (
             <Person
               key={user.presence.self.id}
-              name={"Person"}
               color={user.presence.self.color}
+              name={user.presence.self.name}
             />
           ) : null;
         })}
