@@ -20,7 +20,7 @@ const Lobby = ({ roomId }) => {
   }, [enterRoom, leaveRoom, roomId]);
 
   if (status !== CONNECTED) {
-    return <Loader />;
+    return <Loader status={status} />;
   }
 
   return <LegoRoom />;

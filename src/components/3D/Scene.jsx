@@ -49,16 +49,6 @@ export const Scene = () => {
 
   // useAnchorShorcuts(anchorX, anchorZ, set);
 
-  // const setSelection = useStore(state => state.setSelectedBricks)
-
-  // function undoAddedBrick() {
-  //   setSelection({}); // this should unselect the bricks but Doesn't work for now because of undo is button within leva
-  //   setBricks((prevBricks) => {
-  //     prevBricks.pop();
-  //     return [...prevBricks];
-  //   });
-  // }
-
   const addBrick = (e) => {
     e.stopPropagation();
 

@@ -11,3 +11,25 @@ canvas {
   width: 100vw;
   height: 100vh;
 }
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.spinner {
+  border-radius: 50%;
+  animation-name: spin;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+  margin: 0px 8px;
+  width: 18px;
+  height: 18px;
+  border: 3px solid white;
+  border-top-color: transparent;
+  animation-duration: 1s;
+}

@@ -1,4 +1,7 @@
-export const Loader = () => {
+/* eslint-disable no-unused-vars */
+/* eslint-disable react/prop-types */
+
+export const Loader = ({ status }) => {
   return (
     <div
       style={{
@@ -14,7 +17,8 @@ export const Loader = () => {
         alignItems: "center",
       }}
     >
-      Loading...
+      Loading
+      <span className="spinner spinnerQuarter"></span>
     </div>
   );
 };
