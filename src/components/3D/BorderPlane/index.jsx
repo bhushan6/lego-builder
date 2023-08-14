@@ -8,10 +8,8 @@ import {
   forwardRef,
   useImperativeHandle,
 } from "react";
-import { useFrame, useThree } from "@react-three/fiber";
+import { useThree } from "@react-three/fiber";
 import { DoubleSide, RawShaderMaterial, Color, Vector2 } from "three";
-import { Html } from "@react-three/drei";
-import { cursorColors } from "../../../utils";
 
 function shuffleArray(array) {
   for (let i = array.length - 1; i > 0; i--) {
@@ -130,7 +128,7 @@ export const BorderPlane = forwardRef(function BorderPlane(
   }));
 
   return (
-    <group ref={group}>
+    <group ref={group} raycast={() => {}}>
       <mesh
         rotation={[-Math.PI / 2, 0, 0]}
         ref={mesh}
@@ -139,9 +137,6 @@ export const BorderPlane = forwardRef(function BorderPlane(
       >
         <planeGeometry args={planeSize} />
       </mesh>
-      {/* <Html>
-        <h1>Hello</h1>
-      </Html> */}
     </group>
   );
 });
